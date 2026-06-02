@@ -1,0 +1,25 @@
+# Contains Duplicate
+
+## Difficulty
+Easy
+
+## Approach
+Use a hash set to store the elements that have already been seen. Traverse the array and check whether the current element is present in the set. If it is, a duplicate has been found, so return `True`. Otherwise, add the element to the set and continue. If the traversal completes without finding any duplicate, return `False`.
+
+## Complexity
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(n)
+
+## Code
+```python
+class Solution:
+    def containsDuplicate(self, nums):
+        seen = set()
+
+        for i in nums:
+            if i in seen:
+                return True
+            seen.add(i)
+
+        return False
+```
