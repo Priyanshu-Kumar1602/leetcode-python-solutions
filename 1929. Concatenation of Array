@@ -1,0 +1,29 @@
+# Concatenation of Array
+
+## Difficulty
+Easy
+
+## Approach
+Create an array `ans` of size `2n`. Traverse the original array once and place each element at two positions:
+- `ans[i]` for the first half
+- `ans[i + n]` for the second half
+
+This directly copies the original array twice into the result array.
+
+## Complexity
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(n)
+
+## Code
+```python
+class Solution:
+    def getConcatenation(self, nums: List[int]) -> List[int]:
+        n = len(nums)
+        ans = [0] * (2 * n)
+
+        for i in range(n):
+            ans[i] = nums[i]
+            ans[i + n] = nums[i]
+
+        return ans
+```
