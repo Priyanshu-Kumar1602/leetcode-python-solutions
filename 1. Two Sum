@@ -5,8 +5,8 @@ Easy
 
 ## Approach
 Use a hash map to store the indices of elements in the array. Initialize the hash map with all numbers mapped to `-1` to indicate that they have not been processed yet.
-
-Traverse the array and, for each element, calculate its complement (`target - nums[i]`). If the complement exists in the hash map and has already been assigned a valid index, return the indices of the complement and the current element. Otherwise, store the current element's index in the hash map and continue.
+Traverse the array and, for each element, calculate its complement (`target - nums[i]`). If the complement exists in the hash map and has already been assigned a valid index, 
+return the indices of the complement and the current element. Otherwise, store the current element's index in the hash map and continue.
 
 ## Complexity
 - **Time Complexity:** O(n)
