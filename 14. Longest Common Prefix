@@ -1,0 +1,34 @@
+# Longest Common Prefix
+
+## Difficulty
+Easy
+
+## Approach
+Find the shortest string in the array, since the longest common prefix cannot be longer than it. 
+Traverse each character of the shortest string and compare it with the character at the same index in every other string. 
+If a mismatch is found, return the prefix built so far. Otherwise, add the character to the output string and continue. 
+If all characters match, return the complete prefix.
+
+## Complexity
+- **Time Complexity:** O(n × m)
+- **Space Complexity:** O(m)
+
+Where:
+- `n` = number of strings
+- `m` = length of the shortest string
+
+## Code
+```python
+class Solution:
+    def longestCommonPrefix(self, strs: List[str]) -> str:
+        output = ""
+        s = min(strs, key=len)
+
+        for i in range(len(s)):
+            for word in strs:
+                if s[i] != word[i]:
+                    return output
+            output += s[i]
+
+        return output
+```
