@@ -1,0 +1,27 @@
+# Remove Element
+
+## Difficulty
+Easy
+
+## Approach
+Use a two-pointer technique to modify the array in-place. Maintain a pointer `k` that represents the position where the next valid element should be placed. 
+Traverse the array, and whenever an element is not equal to `val`, copy it to index `k` and increment `k`.After processing all elements, the first `k` positions 
+of the array contain the elements that are not equal to `val`. Return `k` as the new length of the array.
+
+## Complexity
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(1)
+
+## Code
+```python
+class Solution:
+    def removeElement(self, nums: List[int], val: int) -> int:
+        k = 0
+
+        for i in range(len(nums)):
+            if nums[i] != val:
+                nums[k] = nums[i]
+                k += 1
+
+        return k
+```
