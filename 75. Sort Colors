@@ -1,0 +1,46 @@
+# Sort Colors
+
+## Difficulty
+Medium
+
+## Approach
+Use the Dutch National Flag Algorithm with three pointers:
+
+- `l` points to the position where the next `0` should be placed.
+- `r` points to the position where the next `2` should be placed.
+- `i` traverses the array.
+
+While traversing:
+- If `nums[i]` is `0`, swap it with `nums[l]` and move `l` forward.
+- If `nums[i]` is `2`, swap it with `nums[r]` and move `r` backward. Decrement `i` to re-evaluate the newly swapped element.
+- If `nums[i]` is `1`, simply move to the next element.
+
+This partitions the array into three sections: `0`s, `1`s, and `2`s in a single pass.
+
+## Complexity
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(1)
+
+## Code
+```python
+class Solution:
+    def sortColors(self, nums: List[int]) -> None:
+        l, r = 0, len(nums) - 1
+        i = 0
+
+        while i <= r:
+            if nums[i] == 0:
+                temp = nums[l]
+                nums[l] = nums[i]
+                nums[i] = temp
+                l += 1
+
+            elif nums[i] == 2:
+                temp = nums[r]
+                nums[r] = nums[i]
+                nums[i] = temp
+                r -= 1
+                i -= 1
+
+            i += 1
+```
