@@ -1,0 +1,50 @@
+# Majority Element II
+
+## Difficulty
+Medium
+
+## Approach
+Use the Boyer-Moore Voting Algorithm generalized for finding elements that appear more than ⌊n/3⌋ times.
+
+Since there can be at most two such elements, maintain a frequency map with at most two candidates. As the array is traversed:
+- Increment the count of an existing candidate.
+- If there are fewer than two candidates, add the current number.
+- Otherwise, decrement the count of all candidates and remove those whose count becomes zero.
+
+After the first pass, the remaining candidates are potential majority elements. Perform a second pass to verify which candidates 
+actually occur more than ⌊n/3⌋ times and add them to the output.
+
+## Complexity
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(1)
+
+## Code
+```python
+from collections import defaultdict
+
+class Solution:
+    def majorityElement(self, nums):
+        count = defaultdict(int)
+
+        for n in nums:
+            count[n] += 1
+
+            if len(count) <= 2:
+                continue
+
+            new_count = defaultdict(int)
+
+            for n, c in count.items():
+                if c > 1:
+                    new_count[n] = c - 1
+
+            count = new_count
+
+        output = []
+
+        for n in count:
+            if nums.count(n) > len(nums) // 3:
+                output.append(n)
+
+        return output
+```
