@@ -1,0 +1,29 @@
+# Majority Element
+
+## Difficulty
+Easy
+
+## Approach
+Use the Boyer-Moore Voting Algorithm. Maintain a candidate (`output`) and a counter (`count`). If the counter becomes `0`,
+choose the current element as the new candidate. For each element, increment the counter if it matches the candidate; otherwise, decrement it.
+Since the problem guarantees that a majority element exists (appearing more than `n / 2` times), the final candidate will be the majority element.
+
+## Complexity
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(1)
+
+## Code
+```python
+class Solution:
+    def majorityElement(self, nums):
+        output = 0
+        count = 0
+
+        for i in nums:
+            if count == 0:
+                output = i
+
+            count += 1 if output == i else -1
+
+        return output
+```
