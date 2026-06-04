@@ -1,0 +1,37 @@
+# Top K Frequent Elements
+
+## Difficulty
+Medium
+
+## Approach
+Use a frequency map to count the occurrences of each element in the array. Then, create a bucket array (`freq`) where the index represents 
+the frequency and each bucket stores the numbers that appear that many times.After populating the buckets, traverse the bucket array in 
+reverse order (from highest frequency to lowest). Collect elements until `k` frequent elements have been added to the output list.
+This bucket sort approach avoids sorting the frequencies and achieves linear time complexity.
+
+## Complexity
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(n)
+
+## Code
+```python
+class Solution:
+    def topKFrequent(self, nums, k):
+        count = {i: 0 for i in set(nums)}
+        freq = [[] for j in range(len(nums) + 1)]
+
+        for n in nums:
+            count[n] += 1
+
+        for n, c in count.items():
+            freq[c].append(n)
+
+        output = []
+
+        for i in range(len(freq) - 1, -1, -1):
+            for n in freq[i]:
+                output.append(n)
+
+                if len(output) == k:
+                    return output
+```
