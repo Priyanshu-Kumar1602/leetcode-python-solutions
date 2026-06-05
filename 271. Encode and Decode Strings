@@ -1,0 +1,51 @@
+# Encode and Decode Strings
+
+## Difficulty
+Medium
+
+## Approach
+To encode the list of strings, prepend each string with its length followed by a delimiter (`#`). This allows strings to contain any character, 
+including the delimiter itself, because the decoder uses the stored length to determine where each string ends.
+
+During decoding:
+- Read characters until the delimiter (`#`) to obtain the length of the next string.
+- Extract the next `length` characters as the original string.
+- Repeat until the entire encoded string has been processed.
+
+This approach ensures accurate encoding and decoding without ambiguity.
+
+## Complexity
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(n)
+
+Where `n` is the total number of characters across all strings.
+
+## Code
+```python
+class Codec:
+
+    def encode(self, strs: List[str]) -> str:
+        output = ""
+
+        for s in strs:
+            output += str(len(s)) + "#" + s
+
+        return output
+
+    def decode(self, s: str) -> List[str]:
+        output = []
+        i = 0
+
+        while i < len(s):
+            j = i
+
+            while s[j] != "#":
+                j += 1
+
+            length = int(s[i:j])
+
+            output.append(s[j + 1:j + 1 + length])
+            i = j + 1 + length
+
+        return output
+```
