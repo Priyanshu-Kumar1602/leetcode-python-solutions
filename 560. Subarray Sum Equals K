@@ -1,0 +1,36 @@
+# Subarray Sum Equals K
+
+## Difficulty
+Medium
+
+## Approach
+Use a prefix sum and a hash map to efficiently count subarrays whose sum equals `k`.
+
+- Maintain a running sum (`CurrSum`) while traversing the array.
+- For each position, check if there exists a previous prefix sum equal to `CurrSum - k`.
+- If it exists, then the subarray between that previous position and the current position sums to `k`.
+- Store the frequency of each prefix sum in a hash map to handle multiple occurrences.
+
+Initialize the hash map with `{0: 1}` to account for subarrays that start from index `0`.
+
+## Complexity
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(n)
+
+## Code
+```python
+class Solution:
+    def subarraySum(self, nums, k):
+        output = 0
+        CurrSum = 0
+        prefixSum = {0: 1}
+
+        for n in nums:
+            CurrSum += n
+            diff = CurrSum - k
+
+            output += prefixSum.get(diff, 0)
+            prefixSum[CurrSum] = 1 + prefixSum.get(CurrSum, 0)
+
+        return output
+```
