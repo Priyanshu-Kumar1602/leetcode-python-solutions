@@ -1,0 +1,46 @@
+# Merge Strings Alternately
+
+## Difficulty
+Easy
+
+## Approach
+Use two pointers to traverse both strings simultaneously.
+
+- While both strings have remaining characters, append one character from `word1` and then one character from `word2` to the output list.
+- After one string is exhausted, append the remaining characters from the other string.
+- Finally, join the characters in the output list to form the merged string.
+
+Using a list for accumulation avoids the overhead of repeated string concatenation.
+
+## Complexity
+- **Time Complexity:** O(n + m)
+- **Space Complexity:** O(n + m)
+
+Where:
+- `n` = length of `word1`
+- `m` = length of `word2`
+
+## Code
+```python
+class Solution:
+    def mergeAlternately(self, word1, word2):
+        output = []
+        i = 0
+        j = 0
+
+        while i < len(word1) and j < len(word2):
+            output.append(word1[i])
+            output.append(word2[j])
+            i += 1
+            j += 1
+
+        while i < len(word1):
+            output.append(word1[i])
+            i += 1
+
+        while j < len(word2):
+            output.append(word2[j])
+            j += 1
+
+        return "".join(output)
+```
