@@ -1,0 +1,51 @@
+# Valid Sudoku
+
+## Difficulty
+Medium
+
+## Approach
+Use three hash maps of sets to track the digits that have already appeared in each row, column, and 3×3 sub-grid.
+
+- `rows[r]` stores the digits seen in row `r`.
+- `cols[c]` stores the digits seen in column `c`.
+- `squares[(r // 3, c // 3)]` stores the digits seen in the corresponding 3×3 sub-grid.
+
+Traverse each cell of the board:
+- Skip empty cells (`"."`).
+- If the current digit already exists in its row, column, or sub-grid, the board is invalid.
+- Otherwise, add the digit to the corresponding sets.
+
+If the entire board is processed without finding any duplicates, return `True`.
+
+## Complexity
+- **Time Complexity:** O(1)
+- **Space Complexity:** O(1)
+
+> Since the board size is fixed at 9 × 9, there are always at most 81 cells to process.
+
+## Code
+```python
+import collections
+
+class Solution:
+    def isValidSudoku(self, board):
+        rows = collections.defaultdict(set)
+        cols = collections.defaultdict(set)
+        squares = collections.defaultdict(set)
+
+        for r in range(9):
+            for c in range(9):
+                if board[r][c] == ".":
+                    continue
+
+                if (board[r][c] in rows[r] or
+                    board[r][c] in cols[c] or
+                    board[r][c] in squares[(r // 3, c // 3)]):
+                    return False
+
+                rows[r].add(board[r][c])
+                cols[c].add(board[r][c])
+                squares[(r // 3, c // 3)].add(board[r][c])
+
+        return True
+```
