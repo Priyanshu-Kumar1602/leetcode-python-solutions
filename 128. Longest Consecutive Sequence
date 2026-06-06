@@ -1,0 +1,32 @@
+# Longest Consecutive Sequence
+
+## Difficulty
+Medium
+
+## Approach
+Use a hash set to enable constant-time lookups. For each number, check whether it is the start of a sequence by verifying that `n - 1` is not present in the set. 
+If it is the start, extend the sequence by continuously checking for consecutive numbers (`n + 1`, `n + 2`, ...).
+Track the length of each sequence and update the maximum length found. By only starting from the beginning of sequences, each number is processed at most once.
+
+## Complexity
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(n)
+
+## Code
+```python
+class Solution:
+    def longestConsecutive(self, nums):
+        NumSet = set(nums)
+        longest = 0
+
+        for n in NumSet:
+            if (n - 1) not in NumSet:
+                length = 0
+
+                while (n + length) in NumSet:
+                    length += 1
+
+                longest = max(length, longest)
+
+        return longest
+```
