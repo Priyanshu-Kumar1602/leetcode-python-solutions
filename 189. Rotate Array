@@ -1,0 +1,35 @@
+# Rotate Array
+
+## Difficulty
+Medium
+
+## Approach
+Use the array reversal technique to rotate the array in-place.
+
+1. Compute `k % len(nums)` to handle cases where `k` is greater than the array length.
+2. Reverse the entire array.
+3. Reverse the first `k` elements.
+4. Reverse the remaining `n - k` elements.
+
+These three reversals effectively rotate the array to the right by `k` steps while using constant extra space.
+
+## Complexity
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(1)
+
+## Code
+```python
+class Solution:
+    def rotate(self, nums, k):
+        k = k % len(nums)
+
+        def reverse(l, r):
+            while l < r:
+                nums[l], nums[r] = nums[r], nums[l]
+                l += 1
+                r -= 1
+
+        reverse(0, len(nums) - 1)
+        reverse(0, k - 1)
+        reverse(k, len(nums) - 1)
+```
