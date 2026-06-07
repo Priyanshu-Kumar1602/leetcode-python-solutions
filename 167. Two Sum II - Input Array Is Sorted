@@ -1,0 +1,34 @@
+# Two Sum II - Input Array Is Sorted
+
+## Difficulty
+Medium
+
+## Approach
+Use the two-pointer technique on the sorted array.
+
+- Initialize one pointer `i` at the beginning and another pointer `j` at the end of the array.
+- If the sum of `numbers[i]` and `numbers[j]` is greater than the target, move `j` left to reduce the sum.
+- If the sum is less than the target, move `i` right to increase the sum.
+- If the sum equals the target, return the 1-indexed positions of the two numbers.
+
+Since the array is sorted, this approach efficiently finds the required pair without using extra space.
+
+## Complexity
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(1)
+
+## Code
+```python
+class Solution:
+    def twoSum(self, numbers, target):
+        i = 0
+        j = len(numbers) - 1
+
+        while i < j:
+            if numbers[i] + numbers[j] > target:
+                j -= 1
+            elif numbers[i] + numbers[j] < target:
+                i += 1
+            else:
+                return [i + 1, j + 1]
+```
