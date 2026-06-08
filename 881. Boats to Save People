@@ -1,0 +1,43 @@
+# Boats to Save People
+
+## Difficulty
+Medium
+
+## Approach
+Use a greedy two-pointer strategy.
+
+- Sort the array of people's weights.
+- Place one pointer `i` at the lightest person and another pointer `j` at the heaviest person.
+- If the lightest and heaviest people can share a boat without exceeding the weight limit, place them together and move both pointers.
+- Otherwise, the heaviest person must go alone, so move only the `j` pointer.
+- In either case, one boat is used.
+
+Continue until all people have been assigned to boats.
+
+## Complexity
+- **Time Complexity:** O(n log n)
+- **Space Complexity:** O(1)
+
+> The sorting step dominates the runtime.
+
+## Code
+```python
+class Solution:
+    def numRescueBoats(self, people, limit):
+        output = 0
+        people.sort()
+
+        i = 0
+        j = len(people) - 1
+
+        while i <= j:
+            if people[i] + people[j] > limit:
+                output += 1
+                j -= 1
+            else:
+                output += 1
+                i += 1
+                j -= 1
+
+        return output
+```
