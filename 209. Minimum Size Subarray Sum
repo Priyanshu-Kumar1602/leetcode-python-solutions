@@ -1,0 +1,43 @@
+# Minimum Size Subarray Sum
+
+## Difficulty
+Medium
+
+## Approach
+Use a sliding window to find the smallest subarray whose sum is at least `target`.
+
+- Maintain two pointers:
+  - `l` for the left boundary of the window.
+  - `r` for the right boundary of the window.
+- Expand the window by moving `r` and adding elements to the running sum.
+- Whenever the sum becomes greater than or equal to `target`, try shrinking the window from the left while maintaining the condition.
+- Update the minimum window length during this process.
+- If no valid subarray is found, return `0`.
+
+This works because all numbers in the array are positive, allowing the sliding window technique to efficiently adjust the window size.
+
+## Complexity
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(1)
+
+## Code
+```python
+class Solution:
+    def minSubArrayLen(self, target, nums):
+        output = float("inf")
+        l = 0
+        r = 0
+        total = 0
+
+        while r < len(nums):
+            total += nums[r]
+
+            while total >= target:
+                output = min(output, r - l + 1)
+                total -= nums[l]
+                l += 1
+
+            r += 1
+
+        return output if output != float("inf") else 0
+```
