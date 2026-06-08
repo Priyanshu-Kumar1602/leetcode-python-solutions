@@ -1,0 +1,35 @@
+# Best Time to Buy and Sell Stock
+
+## Difficulty
+Easy
+
+## Approach
+Use a greedy approach to track the minimum stock price seen so far.
+
+- Maintain `value` as the lowest price encountered.
+- Traverse the array from left to right.
+- If the current price is greater than `value`, calculate the profit that would be obtained by selling on the current day and update the maximum profit.
+- Otherwise, update `value` to the current lower price.
+
+This ensures that for every day, the best possible buying price before it is considered.
+
+## Complexity
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(1)
+
+## Code
+```python
+class Solution:
+    def maxProfit(self, prices):
+        output = 0
+        value = prices[0]
+
+        for i in range(1, len(prices)):
+            if prices[i] > value:
+                profit = prices[i] - value
+                output = max(output, profit)
+            else:
+                value = prices[i]
+
+        return output
+```
