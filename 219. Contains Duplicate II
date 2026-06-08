@@ -1,0 +1,39 @@
+# Contains Duplicate II
+
+## Difficulty
+Easy
+
+## Approach
+Use a sliding window and a hash set to keep track of the last `k` elements.
+
+- Maintain a window of at most `k` elements using two pointers, `l` and `r`.
+- If the window size exceeds `k`, remove the leftmost element and move `l` forward.
+- Before adding the current element to the window, check whether it already exists in the set.
+- If it does, two equal elements have been found within distance `k`, so return `True`.
+- Otherwise, add the element to the window and continue.
+
+If the entire array is processed without finding such a pair, return `False`.
+
+## Complexity
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(min(n, k))
+
+## Code
+```python
+class Solution:
+    def containsNearbyDuplicate(self, nums, k):
+        window = set()
+        l = 0
+
+        for r in range(len(nums)):
+            if r - l > k:
+                window.remove(nums[l])
+                l += 1
+
+            if nums[r] in window:
+                return True
+
+            window.add(nums[r])
+
+        return False
+```
