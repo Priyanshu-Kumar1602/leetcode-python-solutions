@@ -1,0 +1,54 @@
+# Trapping Rain Water
+
+## Difficulty
+Hard
+
+## Approach
+Use the two-pointer technique to calculate trapped water in a single pass.
+
+- Initialize two pointers:
+  - `l` at the beginning of the array.
+  - `r` at the end of the array.
+- Maintain the maximum height seen so far from both sides:
+  - `leftmax`
+  - `rightmax`
+- If `leftmax < rightmax`, process the left side:
+  - Move `l` one step right.
+  - Update `leftmax`.
+  - The water trapped at the current position is `leftmax - height[l]`.
+- Otherwise, process the right side:
+  - Move `r` one step left.
+  - Update `rightmax`.
+  - The water trapped at the current position is `rightmax - height[r]`.
+
+Since the trapped water at a position depends on the smaller of the two maximum boundaries, this approach correctly computes the total trapped water while traversing the array only once.
+
+## Complexity
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(1)
+
+## Code
+```python
+class Solution:
+    def trap(self, height):
+        if not height:
+            return False
+
+        output = 0
+        l, r = 0, len(height) - 1
+
+        leftmax = height[l]
+        rightmax = height[r]
+
+        while l < r:
+            if leftmax < rightmax:
+                l += 1
+                leftmax = max(leftmax, height[l])
+                output += leftmax - height[l]
+            else:
+                r -= 1
+                rightmax = max(rightmax, height[r])
+                output += rightmax - height[r]
+
+        return output
+```
