@@ -1,0 +1,42 @@
+# Container With Most Water
+
+## Difficulty
+Medium
+
+## Approach
+Use the two-pointer technique to find the maximum water container.
+
+- Initialize one pointer `l` at the beginning and another pointer `r` at the end of the array.
+- The area formed by the two lines is:
+  
+  `width × min(height[l], height[r])`
+
+- Update the maximum area found so far.
+- Move the pointer corresponding to the shorter line inward, since moving the taller line cannot increase the area while the shorter line remains the limiting factor.
+- Continue until the two pointers meet.
+
+This approach efficiently explores all potential maximum-area containers without checking every pair.
+
+## Complexity
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(1)
+
+## Code
+```python
+class Solution:
+    def maxArea(self, heights):
+        MaxArea = 0
+        l = 0
+        r = len(heights) - 1
+
+        while l < r:
+            Area = (r - l) * min(heights[l], heights[r])
+            MaxArea = max(Area, MaxArea)
+
+            if heights[l] < heights[r]:
+                l += 1
+            else:
+                r -= 1
+
+        return MaxArea
+```
