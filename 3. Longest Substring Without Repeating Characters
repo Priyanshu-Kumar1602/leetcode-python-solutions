@@ -1,0 +1,43 @@
+# Longest Substring Without Repeating Characters
+
+## Difficulty
+Medium
+
+## Approach
+Use a sliding window and a hash set to maintain a substring with unique characters.
+
+- Maintain two pointers:
+  - `l` for the left boundary of the window.
+  - `r` for the right boundary of the window.
+- Use a hash set to store the characters currently in the window.
+- If `s[r]` is already in the set, shrink the window from the left until the duplicate character is removed.
+- Add the current character to the set and update the maximum window size.
+
+This ensures that the window always contains unique characters.
+
+## Complexity
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(min(n, m))
+
+Where:
+- `n` = length of the string
+- `m` = size of the character set
+
+## Code
+```python
+class Solution:
+    def lengthOfLongestSubstring(self, s):
+        output = 0
+        charSet = set()
+        l = 0
+
+        for r in range(len(s)):
+            while s[r] in charSet:
+                charSet.remove(s[l])
+                l += 1
+
+            charSet.add(s[r])
+            output = max(output, r - l + 1)
+
+        return output
+```
