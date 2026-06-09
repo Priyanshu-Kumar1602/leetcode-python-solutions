@@ -1,0 +1,40 @@
+# Find K Closest Elements
+
+## Difficulty
+Medium
+
+## Approach
+Use binary search to find the starting index of the window of size `k`.
+
+- The answer must be a contiguous subarray of length `k`.
+- Instead of checking every possible window, perform binary search on the starting index.
+- Let the search range be `[0, len(arr) - k]`.
+- For a candidate starting index `mid`, compare:
+  - Distance from `x` to `arr[mid]`
+  - Distance from `arr[mid + k]` to `x`
+- If the left endpoint is farther from `x` than the element just beyond the right endpoint, shift the window right.
+- Otherwise, keep searching on the left side.
+
+Once binary search finishes, `l` will be the starting index of the optimal window. Return the subarray of length `k` starting at `l`.
+
+## Complexity
+- **Time Complexity:** O(log(n - k) + k)
+- **Space Complexity:** O(1)
+
+## Code
+```python
+class Solution:
+    def findClosestElements(self, arr, k, x):
+        l = 0
+        r = len(arr) - k
+
+        while l < r:
+            mid = (l + r) // 2
+
+            if x - arr[mid] > arr[mid + k] - x:
+                l = mid + 1
+            else:
+                r = mid
+
+        return arr[l : l + k]
+```
