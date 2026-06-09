@@ -1,0 +1,46 @@
+# Longest Repeating Character Replacement
+
+## Difficulty
+Medium
+
+## Approach
+Use a sliding window and a frequency map to maintain the count of characters within the current window.
+
+- Maintain two pointers:
+  - `l` for the left boundary of the window.
+  - `r` for the right boundary of the window.
+- Store the frequency of each character in a hash map.
+- The number of replacements needed for the current window is:
+
+  `window_size - frequency_of_most_common_character`
+
+- If this value exceeds `k`, shrink the window from the left until it becomes valid again.
+- Track the maximum valid window size encountered.
+
+The key insight is that the most frequent character in the window can remain unchanged, while all other characters are replaced.
+
+## Complexity
+- **Time Complexity:** O(26 · n) ≈ O(n)
+- **Space Complexity:** O(1)
+
+> `max(count.values())` takes O(26) time because the string contains only uppercase English letters, which is a constant.
+
+## Code
+```python
+class Solution:
+    def characterReplacement(self, s, k):
+        output = 0
+        count = {}
+        l = 0
+
+        for r in range(len(s)):
+            count[s[r]] = 1 + count.get(s[r], 0)
+
+            while (r - l + 1) - max(count.values()) > k:
+                count[s[l]] -= 1
+                l += 1
+
+            output = max(output, (r - l + 1))
+
+        return output
+```
