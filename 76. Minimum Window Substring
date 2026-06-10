@@ -1,0 +1,64 @@
+# Minimum Window Substring
+
+## Difficulty
+Hard
+
+## Approach
+Use a sliding window with frequency maps to find the smallest substring of `s` that contains all characters of `t`.
+
+- Store the required character frequencies of `t` in `countT`.
+- Maintain a frequency map `window` for the current window in `s`.
+- `need` represents the number of unique characters required.
+- `have` represents how many required characters currently satisfy their frequency requirements.
+- Expand the window by moving the right pointer `r`.
+- When all requirements are satisfied (`have == need`), shrink the window from the left as much as possible while maintaining validity.
+- Track the smallest valid window encountered.
+
+The smallest valid window found during the process is the answer.
+
+## Complexity
+- **Time Complexity:** O(n + m)
+- **Space Complexity:** O(m)
+
+Where:
+- `n` = length of `s`
+- `m` = number of unique characters in `t`
+
+## Code
+```python
+class Solution:
+    def minWindow(self, s, t):
+        if t == "":
+            return ""
+
+        countT, window = {}, {}
+
+        for c in t:
+            countT[c] = 1 + countT.get(c, 0)
+
+        have, need = 0, len(countT)
+
+        output, outputLen = [-1, -1], float("inf")
+        l = 0
+
+        for r in range(len(s)):
+            c = s[r]
+            window[c] = 1 + window.get(c, 0)
+
+            if c in countT and window[c] == countT[c]:
+                have += 1
+
+            while have == need:
+                if (r - l + 1) < outputLen:
+                    output = [l, r]
+                    outputLen = (r - l + 1)
+
+                window[s[l]] -= 1
+
+                if s[l] in countT and window[s[l]] < countT[s[l]]:
+                    have -= 1
+
+                l += 1
+
+        return s[output[0]:output[1] + 1] if outputLen != float("inf") else ""
+```
