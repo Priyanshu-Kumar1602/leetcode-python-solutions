@@ -1,0 +1,44 @@
+# Baseball Game
+
+## Difficulty
+Easy
+
+## Approach
+Use a stack to keep track of valid scores.
+
+For each operation:
+- If the operation is `"+"`, add the sum of the previous two valid scores.
+- If the operation is `"D"`, add double the previous valid score.
+- If the operation is `"C"`, remove the previous valid score.
+- Otherwise, convert the operation to an integer and add it as a new score.
+
+After processing all operations, the sum of the stack represents the final score.
+
+## Complexity
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(n)
+
+## Code
+```python
+class Solution:
+    def calPoints(self, operations):
+        arr1 = []
+
+        for i in operations:
+            if i == "+":
+                a = arr1[-1]
+                b = arr1[-2]
+                arr1.append(int(a) + int(b))
+
+            elif i == "D":
+                a = arr1[-1]
+                arr1.append(int(a) * 2)
+
+            elif i == "C":
+                arr1.pop()
+
+            else:
+                arr1.append(int(i))
+
+        return sum(arr1)
+```
