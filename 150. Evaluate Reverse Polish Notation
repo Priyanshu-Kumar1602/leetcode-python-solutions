@@ -1,0 +1,54 @@
+# Evaluate Reverse Polish Notation
+
+## Difficulty
+Medium
+
+## Approach
+Use a stack to evaluate the expression.
+
+- Traverse each token in the input.
+- If the token is a number, push it onto the stack.
+- If the token is an operator:
+  - Pop the top two operands from the stack.
+  - Apply the operator in the correct order.
+  - Push the result back onto the stack.
+- After processing all tokens, the stack contains a single value, which is the final result.
+
+For division, truncate toward zero as required by the problem statement.
+
+## Complexity
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(n)
+
+## Code
+```python
+class Solution:
+    def evalRPN(self, tokens):
+        stack = []
+
+        for i in tokens:
+            if i == "+":
+                a = stack.pop()
+                b = stack.pop()
+                stack.append(str(int(a) + int(b)))
+
+            elif i == "-":
+                a = stack.pop()
+                b = stack.pop()
+                stack.append(str(int(b) - int(a)))
+
+            elif i == "*":
+                a = stack.pop()
+                b = stack.pop()
+                stack.append(str(int(a) * int(b)))
+
+            elif i == "/":
+                a = stack.pop()
+                b = stack.pop()
+                stack.append(str(int(int(b) / float(int(a)))))
+
+            else:
+                stack.append(i)
+
+        return int(stack[0])
+```
