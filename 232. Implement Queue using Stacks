@@ -1,0 +1,61 @@
+# Implement Queue using Stacks
+
+## Difficulty
+Easy
+
+## Approach
+Use two stacks to simulate queue operations efficiently.
+
+- `s1` is used for incoming elements.
+- `s2` is used for outgoing elements.
+
+### Operations
+- **push(x)**:
+  - Push the element onto `s1`.
+- **pop()**:
+  - If `s2` is empty, transfer all elements from `s1` to `s2`.
+  - Pop and return the top element of `s2`.
+- **peek()**:
+  - If `s2` is empty, transfer all elements from `s1` to `s2`.
+  - Return the top element of `s2`.
+- **empty()**:
+  - The queue is empty if both stacks are empty.
+
+The transfer reverses the order of elements, allowing the oldest inserted element to be accessed first, thereby achieving FIFO behavior.
+
+## Complexity
+- **push(x):** O(1)
+- **pop():** O(1) amortized
+- **peek():** O(1) amortized
+- **empty():** O(1)
+
+- **Space Complexity:** O(n)
+
+## Code
+```python
+class MyQueue:
+
+    def __init__(self):
+        self.s1 = []
+        self.s2 = []
+
+    def push(self, x):
+        self.s1.append(x)
+
+    def pop(self):
+        if not self.s2:
+            while self.s1:
+                self.s2.append(self.s1.pop())
+
+        return self.s2.pop()
+
+    def peek(self):
+        if not self.s2:
+            while self.s1:
+                self.s2.append(self.s1.pop())
+
+        return self.s2[-1]
+
+    def empty(self):
+        return len(self.s1) == 0 and len(self.s2) == 0
+```
