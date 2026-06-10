@@ -1,0 +1,52 @@
+# Implement Stack using Queues
+
+## Difficulty
+Easy
+
+## Approach
+Use a single queue to simulate stack operations.
+
+- **push(x)**:
+  - Simply append the element to the queue.
+- **pop()**:
+  - Rotate the first `n - 1` elements to the back of the queue.
+  - The remaining front element corresponds to the top of the stack, so remove and return it.
+- **top()**:
+  - Return the last element in the queue.
+- **empty()**:
+  - Check whether the queue is empty.
+
+By rotating the queue during `pop()`, the Last-In-First-Out (LIFO) behavior of a stack is achieved using a queue.
+
+## Complexity
+- **push(x):** O(1)
+- **pop():** O(n)
+- **top():** O(1)
+- **empty():** O(1)
+
+- **Space Complexity:** O(n)
+
+## Code
+```python
+from collections import deque
+
+class MyStack:
+
+    def __init__(self):
+        self.q = deque()
+
+    def push(self, x):
+        self.q.append(x)
+
+    def pop(self):
+        for i in range(len(self.q) - 1):
+            self.q.append(self.q.popleft())
+
+        return self.q.popleft()
+
+    def top(self):
+        return self.q[-1]
+
+    def empty(self):
+        return len(self.q) == 0
+```
