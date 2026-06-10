@@ -1,0 +1,48 @@
+# Asteroid Collision
+
+## Difficulty
+Medium
+
+## Approach
+Use a stack to simulate the movement and collisions of asteroids.
+
+- Positive asteroids move to the right and are pushed onto the stack.
+- Negative asteroids move to the left and may collide with positive asteroids already in the stack.
+- While a collision is possible (`stack[-1] > 0` and `a < 0`):
+  - Compare their sizes using `a + stack[-1]`.
+  - If the negative asteroid is larger, remove the positive asteroid from the stack and continue checking.
+  - If the positive asteroid is larger, destroy the negative asteroid.
+  - If both have the same size, destroy both.
+- If the current asteroid survives all collisions, push it onto the stack.
+
+At the end, the stack contains all remaining asteroids in their final order.
+
+## Complexity
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(n)
+
+## Code
+```python
+class Solution:
+    def asteroidCollision(self, asteroids):
+        stack = []
+
+        for a in asteroids:
+            while stack and a < 0 and stack[-1] > 0:
+                diff = a + stack[-1]
+
+                if diff < 0:
+                    stack.pop()
+
+                elif diff > 0:
+                    a = 0
+
+                else:
+                    a = 0
+                    stack.pop()
+
+            if a != 0:
+                stack.append(a)
+
+        return stack
+```
