@@ -1,0 +1,39 @@
+# Daily Temperatures
+
+## Difficulty
+Medium
+
+## Approach
+Use a monotonic decreasing stack to keep track of temperatures that have not yet found a warmer day.
+
+- Store pairs of `[temperature, index]` in the stack.
+- Traverse the temperatures array from left to right.
+- While the current temperature is greater than the temperature at the top of the stack:
+  - Pop the stack.
+  - Calculate the number of days waited (`current_index - previous_index`).
+  - Store the result in the output array.
+- Push the current temperature and its index onto the stack.
+- Any indices remaining in the stack do not have a warmer future day, so their values remain `0`.
+
+The stack always maintains temperatures in decreasing order.
+
+## Complexity
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(n)
+
+## Code
+```python
+class Solution:
+    def dailyTemperatures(self, temperatures):
+        output = [0] * len(temperatures)
+        stack = []  
+
+        for i, t in enumerate(temperatures):
+            while stack and t > stack[-1][0]:
+                stackT, stackInd = stack.pop()
+                output[stackInd] = i - stackInd
+
+            stack.append([t, i])
+
+        return output
+```
