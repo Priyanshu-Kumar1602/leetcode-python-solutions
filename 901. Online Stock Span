@@ -1,0 +1,41 @@
+# Online Stock Span
+
+## Difficulty
+Medium
+
+## Approach
+Use a monotonic decreasing stack to store pairs of `[price, span]`.
+
+- For each new stock price:
+  - Initialize `span = 1` (the current day).
+  - While the stack contains prices less than or equal to the current price:
+    - Add their spans to the current span.
+    - Remove them from the stack.
+  - Push `[price, span]` onto the stack.
+  - Return the computed span.
+
+The stack maintains prices in strictly decreasing order. By storing spans instead of individual days, multiple previous prices can be skipped in a single operation.
+
+## Complexity
+- **Time Complexity:** O(1) amortized per `next()` call
+- **Space Complexity:** O(n)
+
+> A single call to `next()` may take O(n) in the worst case, but each price is pushed and popped at most once across all calls, giving O(1) amortized time.
+
+## Code
+```python
+class StockSpanner(object):
+
+    def __init__(self):
+        self.stack = []
+
+    def next(self, price):
+        span = 1
+
+        while self.stack and self.stack[-1][0] <= price:
+            span += self.stack[-1][1]
+            self.stack.pop()
+
+        self.stack.append([price, span])
+        return span
+```
