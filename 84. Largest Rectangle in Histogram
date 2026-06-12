@@ -1,0 +1,52 @@
+# Largest Rectangle in Histogram
+
+## Difficulty
+Hard
+
+## Approach
+Use a monotonic increasing stack to track bars that can potentially form the largest rectangle.
+
+- Store pairs of `[start_index, height]` in the stack.
+- For each bar:
+  - Let `start = current_index`.
+  - While the current height is smaller than the height at the top of the stack:
+    - Pop the taller bar.
+    - Calculate the rectangle area using:
+      
+      `height × (current_index - start_index)`
+      
+    - Update the maximum area.
+    - Set `start` to the popped bar's start index so the current shorter bar can extend further left.
+  - Push `[start, current_height]` onto the stack.
+- After traversing the histogram, process the remaining bars in the stack:
+  - Their right boundary extends to the end of the histogram.
+  - Calculate the corresponding areas and update the maximum.
+
+The stack maintains heights in increasing order, ensuring every bar is processed exactly once.
+
+## Complexity
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(n)
+
+## Code
+```python
+class Solution(object):
+    def largestRectangleArea(self, heights):
+        maxArea = 0
+        stack = []  
+
+        for i, h in enumerate(heights):
+            start = i
+
+            while stack and stack[-1][1] > h:
+                index, height = stack.pop()
+                maxArea = max(maxArea, height * (i - index))
+                start = index
+
+            stack.append([start, h])
+
+        for i, h in stack:
+            maxArea = max(maxArea, h * (len(heights) - i))
+
+        return maxArea
+```
