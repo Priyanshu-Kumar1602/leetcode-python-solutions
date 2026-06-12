@@ -1,0 +1,65 @@
+# Maximum Frequency Stack
+
+## Difficulty
+Hard
+
+## Approach
+Design a stack that always removes the most frequent element.
+
+Maintain:
+
+- `count`:
+  - Maps each value to its current frequency.
+- `maxCount`:
+  - Stores the highest frequency currently present.
+- `stacks`:
+  - Maps a frequency to a stack of values that have reached that frequency.
+
+### push(val)
+
+- Increment the frequency of `val`.
+- Update `maxCount` if necessary.
+- Push `val` onto the stack corresponding to its new frequency.
+
+### pop()
+
+- Pop the most recently inserted value from the stack with frequency `maxCount`.
+- Decrement its frequency in `count`.
+- If the stack for `maxCount` becomes empty, decrease `maxCount`.
+
+Using a separate stack for each frequency ensures that ties are broken by recency, matching the problem requirements.
+
+## Complexity
+- **push():** O(1)
+- **pop():** O(1)
+
+- **Space Complexity:** O(n)
+
+## Code
+```python
+class FreqStack(object):
+
+    def __init__(self):
+        self.count = {}
+        self.maxCount = 0
+        self.stacks = {}
+
+    def push(self, val):
+        valCount = 1 + self.count.get(val, 0)
+        self.count[val] = valCount
+
+        if valCount > self.maxCount:
+            self.maxCount = valCount
+            self.stacks[valCount] = []
+
+        self.stacks[valCount].append(val)
+
+    def pop(self):
+        output = self.stacks[self.maxCount].pop()
+        self.count[output] -= 1
+
+        if not self.stacks[self.maxCount]:
+            self.maxCount -= 1
+
+        return output
+```
