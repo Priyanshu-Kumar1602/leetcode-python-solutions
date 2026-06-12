@@ -1,0 +1,45 @@
+# Binary Search
+
+## Difficulty
+Easy
+
+## Approach
+Use binary search on the sorted array.
+
+- Initialize two pointers:
+  - `i` at the beginning of the array.
+  - `j` at the end of the array.
+- While `i <= j`:
+  - Compute the middle index `mid`.
+  - If `nums[mid]` is less than the target, search the right half.
+  - If `nums[mid]` is greater than the target, search the left half.
+  - Otherwise, return `mid`.
+- If the target is not found, return `-1`.
+
+At each step, the search space is reduced by half, making the algorithm very efficient.
+
+## Complexity
+- **Time Complexity:** O(log n)
+- **Space Complexity:** O(1)
+
+## Code
+```python
+class Solution:
+    def search(self, nums, target):
+        i = 0
+        j = len(nums) - 1
+
+        while i <= j:
+            mid = (i + j) // 2
+
+            if nums[mid] < target:
+                i = mid + 1
+
+            elif nums[mid] > target:
+                j = mid - 1
+
+            else:
+                return mid
+
+        return -1
+```
