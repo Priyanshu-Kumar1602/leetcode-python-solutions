@@ -1,0 +1,44 @@
+# Sqrt(x)
+
+## Difficulty
+Easy
+
+## Approach
+Use binary search to find the integer square root of `x`.
+
+- Search within the range `[0, x]`.
+- For each midpoint `mid`:
+  - If `mid² > x`, search the left half.
+  - If `mid² < x`, search the right half and store `mid` as the current best answer.
+  - If `mid² == x`, return `mid`.
+- If no exact square root exists, return the largest integer whose square is less than `x`.
+
+The variable `output` keeps track of the floor value of the square root during the search.
+
+## Complexity
+- **Time Complexity:** O(log x)
+- **Space Complexity:** O(1)
+
+## Code
+```python
+class Solution:
+    def mySqrt(self, x):
+        low = 0
+        high = x
+        output = 0
+
+        while low <= high:
+            mid = (low + high) // 2
+
+            if mid ** 2 > x:
+                high = mid - 1
+
+            elif mid ** 2 < x:
+                low = mid + 1
+                output = mid
+
+            else:
+                return mid
+
+        return output
+```
