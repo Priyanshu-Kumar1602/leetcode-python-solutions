@@ -1,0 +1,42 @@
+# Guess Number Higher or Lower
+
+## Difficulty
+Easy
+
+## Approach
+Use binary search to efficiently find the hidden number.
+
+- Initialize:
+  - `i = 1` (lowest possible number)
+  - `j = n` (highest possible number)
+- While `i <= j`:
+  - Compute the middle value `mid`.
+  - Call `guess(mid)`:
+    - If it returns `1`, the hidden number is higher, so search the right half.
+    - If it returns `-1`, the hidden number is lower, so search the left half.
+    - If it returns `0`, `mid` is the hidden number, so return it.
+- Since the search space is halved on each iteration, the correct number is found efficiently.
+
+## Complexity
+- **Time Complexity:** O(log n)
+- **Space Complexity:** O(1)
+
+## Code
+```python
+class Solution:
+    def guessNumber(self, n):
+        i = 1
+        j = n
+
+        while i <= j:
+            mid = (i + j) // 2
+
+            if guess(mid) > 0:
+                i = mid + 1
+
+            elif guess(mid) < 0:
+                j = mid - 1
+
+            else:
+                return mid
+```
