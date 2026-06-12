@@ -1,0 +1,70 @@
+# Capacity To Ship Packages Within D Days
+
+## Difficulty
+Medium
+
+## Approach
+Use binary search on the ship's capacity.
+
+- The minimum possible capacity is the heaviest package:
+  
+  `max(weights)`
+
+- The maximum possible capacity is the sum of all package weights:
+  
+  `sum(weights)`
+
+- For a given capacity:
+  - Simulate loading packages in order.
+  - If the current package exceeds the remaining capacity, start a new day.
+  - Count how many days are required.
+
+- If the packages can be shipped within `days`:
+  - Try a smaller capacity.
+- Otherwise:
+  - Increase the capacity.
+
+The smallest valid capacity found during the binary search is the answer.
+
+## Complexity
+- **Time Complexity:** O(n log m)
+- **Space Complexity:** O(1)
+
+Where:
+- `n` = number of packages
+- `m` = `sum(weights) - max(weights)`
+
+## Code
+```python
+class Solution(object):
+    def shipWithinDays(self, weights, days):
+
+        def canship(cap):
+            ship = 1
+            currcap = cap
+
+            for w in weights:
+                if currcap - w < 0:
+                    ship += 1
+                    currcap = cap
+
+                currcap -= w
+
+            return ship <= days
+
+        i = max(weights)
+        j = sum(weights)
+        output = sum(weights)
+
+        while i <= j:
+            cap = (i + j) // 2
+
+            if canship(cap):
+                j = cap - 1
+                output = min(output, cap)
+
+            else:
+                i = cap + 1
+
+        return output
+```
