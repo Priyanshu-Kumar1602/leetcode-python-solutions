@@ -1,0 +1,54 @@
+# Koko Eating Bananas
+
+## Difficulty
+Medium
+
+## Approach
+Use binary search on Koko's eating speed.
+
+- The minimum possible speed is `1`.
+- The maximum possible speed is `max(piles)`.
+- For each candidate speed `k`:
+  - Calculate the total hours required to eat all piles.
+  - For a pile `p`, the hours needed are:
+
+    `ceil(p / k)`
+
+- If the total hours are less than or equal to `h`, then `k` is a valid speed:
+  - Try finding a smaller valid speed.
+- Otherwise:
+  - Increase the speed.
+
+The smallest valid speed found during the binary search is the answer.
+
+## Complexity
+- **Time Complexity:** O(n log m)
+- **Space Complexity:** O(1)
+
+Where:
+- `n` = number of piles
+- `m` = maximum value in `piles`
+
+## Code
+```python
+class Solution(object):
+    def minEatingSpeed(self, piles, h):
+        i = 1
+        j = max(piles)
+        output = max(piles)
+
+        while i <= j:
+            k = (i + j) // 2
+            hours = 0
+
+            for p in piles:
+                hours += math.ceil(p / float(k))
+
+            if hours <= h:
+                j = k - 1
+                output = min(output, k)
+            else:
+                i = k + 1
+
+        return output
+```
