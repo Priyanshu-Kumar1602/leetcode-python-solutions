@@ -1,0 +1,51 @@
+# Decode String
+
+## Difficulty
+Medium
+
+## Approach
+Use a stack to process nested encoded strings.
+
+- Traverse the string character by character.
+- Push every character onto the stack until a closing bracket `]` is encountered.
+- When `]` is found:
+  - Pop characters until `[` is reached to build the encoded substring.
+  - Remove the `[` from the stack.
+  - Pop any preceding digits to determine the repetition count `k`.
+  - Repeat the substring `k` times and push the result back onto the stack.
+- After processing the entire string, join all elements in the stack to obtain the decoded string.
+
+The stack naturally handles nested encodings because inner expressions are decoded before outer ones.
+
+## Complexity
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(n)
+
+> The total size of all strings processed is bounded by the size of the decoded output.
+
+## Code
+```python
+class Solution:
+    def decodeString(self, s):
+        stack = []
+
+        for i in range(len(s)):
+            if s[i] != "]":
+                stack.append(s[i])
+
+            else:
+                substr = ""
+
+                while stack[-1] != "[":
+                    substr = stack.pop() + substr
+
+                stack.pop()
+
+                k = ""
+                while stack and stack[-1].isdigit():
+                    k = stack.pop() + k
+
+                stack.append(int(k) * substr)
+
+        return "".join(stack)
+```
