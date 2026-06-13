@@ -1,0 +1,69 @@
+# Median of Two Sorted Arrays
+
+## Difficulty
+Hard
+
+## Approach
+Use binary search on the smaller array to find the correct partition.
+
+- Always perform binary search on the smaller array to achieve the optimal time complexity.
+- Let `half` be half of the total number of elements.
+- Choose a partition `i` in array `A`.
+- Compute the corresponding partition `j` in array `B`.
+- Determine:
+  - `Aleft`, `Aright`
+  - `Bleft`, `Bright`
+- A valid partition satisfies:
+  - `Aleft <= Bright`
+  - `Bleft <= Aright`
+- Once a valid partition is found:
+  - If the total number of elements is odd, the median is the smaller of the two right-side values.
+  - If even, the median is the average of the largest left-side value and the smallest right-side value.
+- If `Aleft > Bright`, move the partition left.
+- Otherwise, move the partition right.
+
+This works because both arrays are already sorted.
+
+## Complexity
+- **Time Complexity:** O(log(min(m, n)))
+- **Space Complexity:** O(1)
+
+Where:
+- `m = len(nums1)`
+- `n = len(nums2)`
+
+## Code
+```python
+class Solution(object):
+    def findMedianSortedArrays(self, nums1, nums2):
+        A, B = nums1, nums2
+        total = len(nums1) + len(nums2)
+        half = total // 2
+
+        if len(B) < len(A):
+            A, B = B, A
+
+        l, r = 0, len(A) - 1
+
+        while True:
+            i = (l + r) // 2
+            j = half - i - 2
+
+            Aleft = A[i] if i >= 0 else float("-inf")
+            Aright = A[i + 1] if (i + 1) < len(A) else float("inf")
+
+            Bleft = B[j] if j >= 0 else float("-inf")
+            Bright = B[j + 1] if (j + 1) < len(B) else float("inf")
+
+            if Aleft <= Bright and Aright >= Bleft:
+                if total % 2 != 0:
+                    return min(Aright, Bright)
+
+                return (max(Aleft, Bleft) + min(Aright, Bright)) / float(2)
+
+            elif Aleft > Bright:
+                r = i - 1
+
+            else:
+                l = i + 1
+```
