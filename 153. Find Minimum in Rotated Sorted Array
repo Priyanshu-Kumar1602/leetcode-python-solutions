@@ -1,0 +1,53 @@
+# Find Minimum in Rotated Sorted Array
+
+## Difficulty
+Medium
+
+## Approach
+Use binary search to locate the minimum element.
+
+- Maintain two pointers:
+  - `i` at the start of the array.
+  - `j` at the end of the array.
+- If the current subarray is already sorted (`nums[i] < nums[j]`):
+  - The minimum is `nums[i]`.
+  - Update the answer and stop.
+- Otherwise:
+  - Compute the middle index `mid`.
+  - Update the current minimum using `nums[mid]`.
+  - If `nums[mid] >= nums[i]`:
+    - The left half is sorted.
+    - The minimum must be in the right half.
+  - Otherwise:
+    - The rotation point lies in the left half.
+    - Search the left half.
+
+The search space is reduced by half on every iteration.
+
+## Complexity
+- **Time Complexity:** O(log n)
+- **Space Complexity:** O(1)
+
+## Code
+```python
+class Solution(object):
+    def findMin(self, nums):
+        i = 0
+        j = len(nums) - 1
+        output = max(nums)
+
+        while i <= j:
+            if nums[i] < nums[j]:
+                output = min(output, nums[i])
+                break
+
+            mid = (i + j) // 2
+            output = min(output, nums[mid])
+
+            if nums[mid] >= nums[i]:
+                i = mid + 1
+            else:
+                j = mid - 1
+
+        return output
+```
