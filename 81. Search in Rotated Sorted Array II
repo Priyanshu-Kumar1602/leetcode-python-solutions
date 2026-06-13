@@ -1,0 +1,59 @@
+# Search in Rotated Sorted Array II
+
+## Difficulty
+Medium
+
+## Approach
+Use a modified binary search that handles duplicate values.
+
+- Maintain two pointers:
+  - `l` at the beginning of the array.
+  - `r` at the end.
+- Compute `mid` and check if `nums[mid]` is the target.
+- Determine which half is sorted:
+  - If `nums[l] < nums[mid]`, the left half is sorted.
+  - If `nums[l] > nums[mid]`, the right half is sorted.
+- Check whether the target lies within the sorted half:
+  - If yes, search that half.
+  - Otherwise, search the other half.
+- When `nums[l] == nums[mid]`, duplicates prevent us from determining the sorted side:
+  - Increment `l` by 1 and continue.
+
+The duplicate case may force the algorithm to discard elements one at a time.
+
+## Complexity
+- **Time Complexity:** O(log n) average, O(n) worst case
+- **Space Complexity:** O(1)
+
+> The worst case occurs when many duplicates exist, such as `[1,1,1,1,1,1,1]`, where binary search cannot reliably determine the sorted half.
+
+## Code
+```python
+class Solution(object):
+    def search(self, nums, target):
+        l = 0
+        r = len(nums) - 1
+
+        while l <= r:
+            mid = (l + r) // 2
+
+            if nums[mid] == target:
+                return True
+
+            if nums[l] < nums[mid]:
+                if nums[l] <= target < nums[mid]:
+                    r = mid - 1
+                else:
+                    l = mid + 1
+
+            elif nums[l] > nums[mid]:
+                if nums[mid] < target <= nums[r]:
+                    l = mid + 1
+                else:
+                    r = mid - 1
+
+            else:
+                l += 1
+
+        return False
+```
