@@ -1,0 +1,70 @@
+# Split Array Largest Sum
+
+## Difficulty
+Hard
+
+## Approach
+Use binary search on the answer (largest allowed subarray sum).
+
+- The minimum possible answer is:`max(nums)`, 
+  because every subarray must contain at least one element.
+
+- The maximum possible answer is:`sum(nums)`,
+  which corresponds to placing all elements into a single subarray.
+
+- For a candidate maximum subarray sum `subsum`:
+  - Traverse the array greedily.
+  - Keep adding elements to the current subarray.
+  - If adding an element would exceed `subsum`, start a new subarray.
+  - Count how many subarrays are needed.
+
+- If the number of subarrays required is less than or equal to `k`:
+  - `subsum` is valid.
+  - Try a smaller value.
+- Otherwise:
+  - Increase `subsum`.
+
+The smallest valid `subsum` found by binary search is the answer.
+
+## Complexity
+- **Time Complexity:** O(n log S)
+- **Space Complexity:** O(1)
+
+Where:
+- `n` = length of `nums`
+- `S` = `sum(nums)`
+
+## Code
+```python
+class Solution(object):
+    def splitArray(self, nums, k):
+
+        def cansub(subsum):
+            subarray = 1
+            subsum1 = subsum
+
+            for n in nums:
+                if subsum1 - n < 0:
+                    subarray += 1
+                    subsum1 = subsum
+
+                subsum1 -= n
+
+            return subarray <= k
+
+        i = max(nums)
+        j = sum(nums)
+        output = sum(nums)
+
+        while i <= j:
+            subsum = (i + j) // 2
+
+            if cansub(subsum):
+                j = subsum - 1
+                output = min(output, subsum)
+
+            else:
+                i = subsum + 1
+
+        return output
+```
