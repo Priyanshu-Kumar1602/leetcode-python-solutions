@@ -1,0 +1,48 @@
+# Linked List Cycle
+
+## Difficulty
+Easy
+
+## Approach
+Use Floyd's Cycle Detection Algorithm (Tortoise and Hare).
+
+- Initialize two pointers:
+  - `slow` moves one step at a time.
+  - `fast` moves two steps at a time.
+- Traverse the linked list:
+  - Move `slow` by one node.
+  - Move `fast` by two nodes.
+- If there is a cycle, the two pointers will eventually meet.
+- If `fast` reaches the end of the list (`None`), then no cycle exists.
+
+This works because a faster pointer will eventually lap a slower pointer inside a cycle.
+
+## Complexity
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(1)
+
+Where:
+- `n` = number of nodes in the linked list.
+
+## Code
+```python
+# Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution(object):
+    def hasCycle(self, head):
+        slow = head
+        fast = head
+
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+
+            if slow == fast:
+                return True
+
+        return False
+```
