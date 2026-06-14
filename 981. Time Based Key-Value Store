@@ -1,0 +1,62 @@
+# Time Based Key-Value Store
+
+## Difficulty
+Medium
+
+## Approach
+Store all values for a key along with their timestamps and use binary search to retrieve the most recent valid value.
+
+### set(key, value, timestamp)
+- Maintain a dictionary where:
+  - The key is the string key.
+  - The value is a list of `[value, timestamp]` pairs.
+- Append the new pair to the list.
+- Since timestamps are given in strictly increasing order for each key, the list remains sorted by timestamp.
+
+### get(key, timestamp)
+- Retrieve the list associated with the key.
+- Use binary search to find the largest timestamp that is less than or equal to the requested timestamp.
+- Keep track of the latest valid value encountered during the search.
+- Return the value if found; otherwise return an empty string.
+
+Using binary search allows efficient retrieval without scanning the entire history.
+
+## Complexity
+- **set():** O(1)
+- **get():** O(log n)
+
+- **Space Complexity:** O(n)
+
+Where:
+- `n` is the number of values stored for a given key.
+
+## Code
+```python
+class TimeMap(object):
+
+    def __init__(self):
+        self.store = {}
+
+    def set(self, key, value, timestamp):
+        if key not in self.store:
+            self.store[key] = []
+
+        self.store[key].append([value, timestamp])
+
+    def get(self, key, timestamp):
+        output = ""
+        values = self.store.get(key, [])
+
+        l, r = 0, len(values) - 1
+
+        while l <= r:
+            mid = (l + r) // 2
+
+            if values[mid][1] <= timestamp:
+                output = values[mid][0]
+                l = mid + 1
+            else:
+                r = mid - 1
+
+        return output
+```
