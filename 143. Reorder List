@@ -1,0 +1,67 @@
+# Reorder List
+
+## Difficulty
+Medium
+
+## Approach
+Reorder the list in three phases:
+
+### 1. Find the Middle
+- Use slow and fast pointers.
+- `slow` moves one step at a time.
+- `fast` moves two steps at a time.
+- When `fast` reaches the end, `slow` points to the middle.
+
+### 2. Reverse the Second Half
+- Split the list into two halves.
+- Reverse the second half in-place.
+
+### 3. Merge the Two Halves
+- Alternate nodes from the first half and the reversed second half.
+- Connect nodes in the order:
+
+`L0 → Ln → L1 → Ln-1 → L2 → Ln-2 → ...`
+
+This achieves the required reordering without using extra space.
+
+## Complexity
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(1)
+
+Where:
+- `n` = number of nodes in the linked list.
+
+## Code
+```python
+# Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+
+class Solution(object):
+    def reorderList(self, head):
+        slow = head
+        fast = head.next
+
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+
+        second = slow.next
+        slow.next = None
+
+        prev = None
+        while second:
+            temp = second.next
+            second.next = prev
+            prev = second
+            second = temp
+
+        first, second = head, prev
+        while second:
+            temp1, temp2 = first.next, second.next
+            first.next = second
+            second.next = temp1
+            first, second = temp1, temp2
+```
