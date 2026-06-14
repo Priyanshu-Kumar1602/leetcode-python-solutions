@@ -1,0 +1,88 @@
+# Find in Mountain Array
+
+## Difficulty
+Hard
+
+## Approach
+Use binary search three times.
+
+### Step 1: Find the Peak Element
+- A mountain array increases and then decreases.
+- Use binary search to locate the peak index.
+- Compare the middle element with its neighbors:
+  - If the slope is increasing, move right.
+  - If the slope is decreasing, move left.
+  - Otherwise, the peak has been found.
+
+### Step 2: Binary Search on the Increasing Part
+- Search for the target in the range `[0, peak]`.
+- Since this portion is sorted in ascending order, use standard binary search.
+
+### Step 3: Binary Search on the Decreasing Part
+- If the target was not found on the left side, search in `[peak, n-1]`.
+- Since this portion is sorted in descending order, reverse the binary search conditions.
+
+If the target exists in either half, return its index. Otherwise, return `-1`.
+
+## Complexity
+- **Time Complexity:** O(log n)
+- **Space Complexity:** O(1)
+
+## Code
+```python
+class Solution(object):
+    def findInMountainArray(self, target, mountainArr):
+        length = mountainArr.length()
+
+        l, r = 1, length - 2
+
+        while l <= r:
+            m = (l + r) // 2
+
+            left = mountainArr.get(m - 1)
+            mid = mountainArr.get(m)
+            right = mountainArr.get(m + 1)
+
+            if left < mid < right:
+                l = m + 1
+
+            elif left > mid > right:
+                r = m - 1
+
+            else:
+                break
+
+        peak = m
+
+        l, r = 0, peak
+
+        while l <= r:
+            m = (l + r) // 2
+            value = mountainArr.get(m)
+
+            if value < target:
+                l = m + 1
+
+            elif value > target:
+                r = m - 1
+
+            else:
+                return m
+
+        l, r = peak, length - 1
+
+        while l <= r:
+            m = (l + r) // 2
+            value = mountainArr.get(m)
+
+            if value > target:
+                l = m + 1
+
+            elif value < target:
+                r = m - 1
+
+            else:
+                return m
+
+        return -1
+```
