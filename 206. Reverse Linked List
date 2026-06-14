@@ -1,0 +1,48 @@
+# Reverse Linked List
+
+## Difficulty
+Easy
+
+## Approach
+Use three pointers to reverse the linked list in-place.
+
+- `prev` points to the previous node (initially `None`).
+- `curr` points to the current node.
+- `nxt` temporarily stores the next node before changing links.
+
+For each node:
+1. Save the next node in `nxt`.
+2. Reverse the current node's pointer by setting `curr.next = prev`.
+3. Move `prev` forward to the current node.
+4. Move `curr` forward to `nxt`.
+
+When the traversal finishes, `prev` points to the new head of the reversed list.
+
+## Complexity
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(1)
+
+Where:
+- `n` = number of nodes in the linked list.
+
+## Code
+```python
+# Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+
+class Solution(object):
+    def reverseList(self, head):
+        prev = None
+        curr = head
+
+        while curr:
+            nxt = curr.next
+            curr.next = prev
+            prev = curr
+            curr = nxt
+
+        return prev
+```
