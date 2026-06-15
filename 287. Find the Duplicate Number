@@ -1,0 +1,69 @@
+# Find the Duplicate Number
+
+## Difficulty
+Medium
+
+## Approach
+Treat the array as a linked list and use Floyd's Cycle Detection Algorithm.
+
+### Key Observation
+Since:
+- The array contains `n + 1` integers.
+- Each integer is in the range `[1, n]`.
+- Exactly one number is duplicated.
+
+We can interpret:
+```python
+i -> nums[i]
+```
+as a linked list where each index points to another index.
+Because there are more indices than possible values, a cycle must exist. The duplicate number is the entrance to that cycle.
+
+### Step 1: Find an Intersection Point
+- Use two pointers:
+  - `slow` moves one step.
+  - `fast` moves two steps.
+- They will eventually meet inside the cycle.
+
+### Step 2: Find the Cycle Entrance
+- Start a new pointer `slow2` at index `0`.
+- Move both `slow` and `slow2` one step at a time.
+- The node where they meet is the entrance of the cycle.
+- That value is the duplicate number.
+
+## Why It Works
+This is the same idea as finding the start of a cycle in a linked list:
+
+- First meeting point occurs somewhere inside the cycle.
+- Resetting one pointer to the start and moving both at the same speed causes them to meet at the cycle entrance.
+- The cycle entrance corresponds to the duplicated value.
+
+## Complexity
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(1)
+
+Where:
+- `n` = length of the array.
+
+## Code
+```python
+class Solution(object):
+    def findDuplicate(self, nums):
+        slow, fast = 0, 0
+
+        while True:
+            slow = nums[slow]
+            fast = nums[nums[fast]]
+
+            if slow == fast:
+                break
+
+        slow2 = 0
+
+        while True:
+            slow = nums[slow]
+            slow2 = nums[slow2]
+
+            if slow == slow2:
+                return slow
+```
