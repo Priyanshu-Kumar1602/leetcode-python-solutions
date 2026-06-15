@@ -1,0 +1,84 @@
+# Reverse Linked List II
+
+## Difficulty
+Medium
+
+## Approach
+Reverse the linked list only between positions `left` and `right`.
+
+### Step 1: Find the Start of the Sublist
+- Create a dummy node pointing to `head`.
+- Move:
+  - `LeftPrev` to the node immediately before position `left`.
+  - `curr` to the node at position `left`.
+
+### Step 2: Reverse the Sublist
+- Reverse exactly `right - left + 1` nodes using the standard linked list reversal technique.
+- After the loop:
+  - `prev` points to the new head of the reversed sublist.
+  - `curr` points to the first node after the reversed section.
+
+### Step 3: Reconnect the List
+The original node at position `left` becomes the tail of the reversed sublist.
+
+Connect:
+- The tail of the reversed sublist to the remaining list.
+- The node before the sublist to the new head of the reversed sublist.
+
+```python
+LeftPrev.next.next = curr
+LeftPrev.next = prev
+```
+
+### Example
+
+Input:
+
+```text
+1 -> 2 -> 3 -> 4 -> 5
+left = 2
+right = 4
+```
+
+After reversing:
+
+```text
+1 -> 4 -> 3 -> 2 -> 5
+```
+
+## Complexity
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(1)
+
+Where:
+- `n` = number of nodes in the linked list.
+
+## Code
+```python
+# Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+
+class Solution(object):
+    def reverseBetween(self, head, left, right):
+        dummy = ListNode(0, head)
+
+        LeftPrev, curr = dummy, head
+
+        for i in range(left - 1):
+            LeftPrev, curr = curr, curr.next
+
+        prev = None
+        for i in range(right - left + 1):
+            temp = curr.next
+            curr.next = prev
+            prev = curr
+            curr = temp
+
+        LeftPrev.next.next = curr
+        LeftPrev.next = prev
+
+        return dummy.next
+```
