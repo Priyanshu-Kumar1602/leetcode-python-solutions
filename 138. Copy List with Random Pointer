@@ -1,0 +1,78 @@
+# Copy List with Random Pointer
+
+## Difficulty
+Medium
+
+## Approach
+Use a hash map to maintain a mapping between original nodes and their copies.
+
+### Step 1: Create Copies of All Nodes
+- Traverse the original list.
+- Create a copy of each node.
+- Store the mapping:
+
+```python
+original_node -> copied_node
+```
+
+- Initialize the map with:
+
+```python
+{None: None}
+```
+
+This simplifies handling `next` and `random` pointers that are `None`.
+
+### Step 2: Connect Pointers
+- Traverse the original list again.
+- For each node:
+  - Set the copied node's `next` pointer.
+  - Set the copied node's `random` pointer.
+- Use the hash map to retrieve the corresponding copied nodes.
+
+### Step 3: Return the New Head
+- The copied head is stored as:
+
+```python
+OldToCopy[head]
+```
+
+This creates a deep copy where every node and pointer structure is duplicated.
+
+## Complexity
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(n)
+
+Where:
+- `n` = number of nodes in the linked list.
+
+## Code
+```python
+"""
+# Definition for a Node.
+class Node:
+    def __init__(self, x, next=None, random=None):
+        self.val = int(x)
+        self.next = next
+        self.random = random
+"""
+
+class Solution(object):
+    def copyRandomList(self, head):
+        OldToCopy = {None: None}
+        curr = head
+
+        while curr:
+            copy = Node(curr.val)
+            OldToCopy[curr] = copy
+            curr = curr.next
+
+        curr = head
+        while curr:
+            copy = OldToCopy[curr]
+            copy.next = OldToCopy[curr.next]
+            copy.random = OldToCopy[curr.random]
+            curr = curr.next
+
+        return OldToCopy[head]
+```
