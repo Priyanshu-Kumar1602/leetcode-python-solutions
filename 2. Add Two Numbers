@@ -1,0 +1,64 @@
+# Add Two Numbers
+
+## Difficulty
+Medium
+
+## Approach
+Simulate the addition process digit by digit, just like elementary school addition.
+
+- Use a dummy node to build the result list.
+- Maintain a `carry` value.
+- Traverse both linked lists simultaneously:
+  - If one list is shorter, treat its value as `0`.
+  - Compute: `sum = v1 + v2 + carry`
+  - The new digit is: `sum % 10`
+  - The new carry is: `sum // 10`
+
+- Create a new node with the digit and append it to the result list.
+- Continue while:
+  - `l1` exists, or
+  - `l2` exists, or
+  - `carry` is non-zero.
+
+The dummy node simplifies handling the head of the result list.
+
+## Complexity
+- **Time Complexity:** O(max(n, m))
+- **Space Complexity:** O(max(n, m))
+
+Where:
+- `n` = length of `l1`
+- `m` = length of `l2`
+
+The output linked list may contain up to `max(n, m) + 1` nodes.
+
+## Code
+```python
+# Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+
+class Solution(object):
+    def addTwoNumbers(self, l1, l2):
+        dummy = ListNode()
+        curr = dummy
+        carry = 0
+
+        while l1 or l2 or carry:
+            v1 = l1.val if l1 else 0
+            v2 = l2.val if l2 else 0
+
+            val = v1 + v2 + carry
+            carry = val // 10
+            val = val % 10
+
+            curr.next = ListNode(val)
+            curr = curr.next
+
+            l1 = l1.next if l1 else None
+            l2 = l2.next if l2 else None
+
+        return dummy.next
+```
