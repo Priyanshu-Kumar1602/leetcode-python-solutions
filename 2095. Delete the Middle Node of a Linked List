@@ -1,0 +1,77 @@
+# Delete the Middle Node of a Linked List
+
+## Difficulty
+Medium
+
+## Approach
+Find the length of the linked list, then remove the middle node.
+
+### Step 1: Handle Edge Case
+- If the list contains only one node, deleting the middle node results in an empty list.
+
+```python
+if not head.next:
+    return None
+```
+
+### Step 2: Compute the Length
+- Traverse the linked list and count the number of nodes.
+
+### Step 3: Find the Node Before the Middle
+- The middle index is:
+
+```python
+n // 2
+```
+
+- Use a dummy node to simplify deletion.
+- Move `curr` to the node immediately before the middle node.
+
+### Step 4: Delete the Middle Node
+- Skip the middle node:
+
+```python
+curr.next = curr.next.next
+```
+- Return the head of the modified list.
+
+## Complexity
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(1)
+
+Where:
+- `n` = number of nodes in the linked list.
+
+## Code
+```python
+# Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+
+class Solution(object):
+    def deleteMiddle(self, head):
+        if not head.next:
+            return None
+
+        dummy = ListNode(0, head)
+
+        curr = head
+        n = 0
+
+        while curr:
+            n += 1
+            curr = curr.next
+
+        n = n // 2
+
+        curr = dummy
+        for i in range(n):
+            curr = curr.next
+
+        curr.next = curr.next.next
+
+        return dummy.next
+```
+
