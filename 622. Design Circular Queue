@@ -1,0 +1,130 @@
+# Design Circular Queue
+
+## Difficulty
+Medium
+
+## Approach
+Use a doubly linked list with two dummy nodes.
+
+### Data Structure
+- `left` → dummy node before the front.
+- `right` → dummy node after the rear.
+- `space` → remaining capacity.
+
+Initially:
+
+```text
+left <-> right
+```
+
+### enQueue(value)
+- If the queue is full, return `False`.
+- Insert a new node immediately before `right`.
+- Decrement available space.
+
+### deQueue()
+- If the queue is empty, return `False`.
+- Remove the node immediately after `left`.
+- Increment available space.
+
+### Front()
+- Return the value after `left`.
+- Return `-1` if empty.
+
+### Rear()
+- Return the value before `right`.
+- Return `-1` if empty.
+
+### isEmpty()
+- Queue is empty when:
+
+```python
+left.next == right
+```
+
+### isFull()
+- Queue is full when:
+
+```python
+space == 0
+```
+
+## Complexity
+
+| Operation | Time |
+|------------|------|
+| enQueue | O(1) |
+| deQueue | O(1) |
+| Front | O(1) |
+| Rear | O(1) |
+| isEmpty | O(1) |
+| isFull | O(1) |
+
+### Space Complexity
+- **O(k)**
+
+where `k` is the queue capacity.
+
+## Code
+```python
+class ListNode:
+    def __init__(self, val, nxt, prev):
+        self.val = val
+        self.next = nxt
+        self.prev = prev
+
+
+class MyCircularQueue:
+
+    def __init__(self, k):
+        self.space = k
+
+        self.left = ListNode(0, None, None)
+        self.right = ListNode(0, None, self.left)
+
+        self.left.next = self.right
+
+    def enQueue(self, value):
+        if self.isFull():
+            return False
+
+        curr = ListNode(
+            value,
+            self.right,
+            self.right.prev
+        )
+
+        self.right.prev.next = curr
+        self.right.prev = curr
+
+        self.space -= 1
+        return True
+
+    def deQueue(self):
+        if self.isEmpty():
+            return False
+
+        self.left.next = self.left.next.next
+        self.left.next.prev = self.left
+
+        self.space += 1
+        return True
+
+    def Front(self):
+        if self.isEmpty():
+            return -1
+
+        return self.left.next.val
+
+    def Rear(self):
+        if self.isEmpty():
+            return -1
+
+        return self.right.prev.val
+
+    def isEmpty(self):
+        return self.left.next == self.right
+
+    def isFull(self):
+        return self.space == 0
+```
