@@ -1,0 +1,113 @@
+# Reverse Nodes in k-Group
+
+## Difficulty
+Hard
+
+## Approach
+Reverse the linked list in groups of size `k`.
+
+### Step 1: Find the kth Node
+Use a helper function:
+
+```python
+getkth(curr, k)
+```
+
+Starting from `curr`, move `k` steps forward.
+
+- If the kth node exists, a full group can be reversed.
+- Otherwise, the remaining nodes are left unchanged.
+
+### Step 2: Reverse the Group
+For a group:
+
+```text
+groupPrev -> 1 -> 2 -> 3 -> groupNext
+```
+
+Reverse the links between:
+
+```text
+1 -> 2 -> 3
+```
+
+using the standard linked-list reversal technique.
+
+Initialize:
+
+```python
+prev = groupNext
+curr = groupPrev.next
+```
+
+This ensures the reversed group's tail is automatically connected to the next group.
+
+### Step 3: Reconnect the Group
+After reversal:
+
+```text
+groupPrev -> 3 -> 2 -> 1 -> groupNext
+```
+
+Update:
+
+```python
+temp = groupPrev.next
+groupPrev.next = kth
+groupPrev = temp
+```
+
+where:
+- `kth` becomes the new head of the group.
+- `temp` becomes the tail of the reversed group and serves as the previous node for the next iteration.
+
+## Complexity
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(1)
+
+Where:
+- `n` = number of nodes in the linked list.
+
+## Code
+```python
+# Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+
+class Solution(object):
+    def reverseKGroup(self, head, k):
+
+        def getkth(curr, k):
+            while curr and k > 0:
+                curr = curr.next
+                k -= 1
+            return curr
+
+        dummy = ListNode(0, head)
+        groupPrev = dummy
+
+        while True:
+            kth = getkth(groupPrev, k)
+
+            if not kth:
+                break
+
+            groupNext = kth.next
+
+            prev, curr = kth.next, groupPrev.next
+
+            while curr != groupNext:
+                temp = curr.next
+                curr.next = prev
+                prev = curr
+                curr = temp
+
+            temp = groupPrev.next
+            groupPrev.next = kth
+            groupPrev = temp
+
+        return dummy.next
+```
+
