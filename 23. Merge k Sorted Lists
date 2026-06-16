@@ -1,0 +1,113 @@
+# Merge k Sorted Lists
+
+## Difficulty
+Hard
+
+## Approach
+Use **divide and conquer** to repeatedly merge pairs of linked lists.
+
+### Helper: Merge Two Sorted Lists
+- Use the standard merge procedure from Merge Two Sorted Lists.
+- Compare the current nodes of both lists.
+- Append the smaller node to the result.
+- Attach the remaining nodes once one list is exhausted.
+
+### Merge Lists in Pairs
+Instead of merging all lists one by one:
+
+```text
+L1  L2  L3  L4
+ |   |   |   |
+ ↓   ↓   ↓   ↓
+ M1      M2
+      ↓
+   Final
+```
+
+- Merge lists two at a time.
+- Store merged results in a new array.
+- Repeat until only one list remains.
+
+This is analogous to the merge phase of Merge Sort.
+
+### Why It Works
+Each round roughly halves the number of lists:
+
+```text
+k → k/2 → k/4 → ... → 1
+```
+
+So there are:
+
+```text
+O(log k)
+```
+
+rounds of merging.
+
+Since every node is processed once per round, the total complexity becomes:
+
+```text
+O(N log k)
+```
+
+where `N` is the total number of nodes across all lists.
+
+## Complexity
+
+- **Time Complexity:** O(N log k)
+- **Space Complexity:** O(1) auxiliary space
+  - Ignoring the temporary list used to store merged heads.
+
+Where:
+- `N` = total number of nodes across all linked lists.
+- `k` = number of linked lists.
+
+## Code
+
+```python
+# class ListNode(object):
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+
+class Solution(object):
+    def mergeKLists(self, lists):
+
+        def mergeList(l1, l2):
+            dummy = ListNode()
+            tail = dummy
+
+            while l1 and l2:
+                if l1.val < l2.val:
+                    tail.next = l1
+                    l1 = l1.next
+                else:
+                    tail.next = l2
+                    l2 = l2.next
+
+                tail = tail.next
+
+            if l1:
+                tail.next = l1
+            elif l2:
+                tail.next = l2
+
+            return dummy.next
+
+        if len(lists) == 0:
+            return None
+
+        while len(lists) > 1:
+            mergedLists = []
+
+            for i in range(0, len(lists), 2):
+                l1 = lists[i]
+                l2 = lists[i + 1] if (i + 1) < len(lists) else None
+
+                mergedLists.append(mergeList(l1, l2))
+
+            lists = mergedLists
+
+        return lists[0]
+```
