@@ -1,0 +1,56 @@
+# Binary Tree Postorder Traversal
+
+## Difficulty
+Easy
+
+## Approach
+Use Depth-First Search (DFS) with recursion.
+
+Postorder traversal follows:
+
+```text
+Left → Right → Root
+```
+
+For each node:
+
+1. Traverse the left subtree.
+2. Traverse the right subtree.
+3. Visit the current node and add its value to the result.
+
+This guarantees that a node is processed only after both of its children have been processed.
+
+## Complexity
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(h)
+
+Where:
+- `n` is the number of nodes.
+- `h` is the height of the tree.
+
+In the worst case (skewed tree), the space complexity becomes O(n).
+
+## Code
+```python
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution(object):
+    def postorderTraversal(self, root):
+        result = []
+
+        def postorder(node):
+            if not node:
+                return
+
+            postorder(node.left)
+            postorder(node.right)
+            result.append(node.val)
+
+        postorder(root)
+        return result
+```
