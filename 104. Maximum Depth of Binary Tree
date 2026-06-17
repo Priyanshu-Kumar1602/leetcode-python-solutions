@@ -1,0 +1,57 @@
+# Maximum Depth of Binary Tree
+
+## Difficulty
+Easy
+
+## Approach
+Use an iterative Depth-First Search (DFS) with a stack.
+
+Each stack entry stores:
+
+```python
+[node, depth]
+```
+
+Algorithm:
+
+1. Start with the root node at depth `1`.
+2. Pop a node from the stack.
+3. Update the maximum depth seen so far.
+4. Push its children with depth `depth + 1`.
+5. Continue until the stack becomes empty.
+
+The largest depth encountered during the traversal is the answer.
+
+## Complexity
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(n)
+
+Where:
+- `n` is the number of nodes in the tree.
+
+In the worst case, the stack may contain O(n) nodes.
+
+## Code
+```python
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution(object):
+    def maxDepth(self, root):
+        stack = [[root, 1]]
+        output = 0
+
+        while stack:
+            node, depth = stack.pop()
+
+            if node:
+                output = max(output, depth)
+                stack.append([node.left, depth + 1])
+                stack.append([node.right, depth + 1])
+
+        return output
+```
