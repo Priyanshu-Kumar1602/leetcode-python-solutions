@@ -1,0 +1,72 @@
+# Subtree of Another Tree
+
+## Difficulty
+Easy
+
+## Approach
+Use two recursive DFS traversals:
+
+### `sameTree(p, q)`
+Checks whether two trees are identical.
+
+For each pair of nodes:
+
+1. If both nodes are `None`, return `True`.
+2. If one node is `None` or their values differ, return `False`.
+3. Recursively compare:
+   - Left subtrees
+   - Right subtrees
+
+### `isSubtree(root, subRoot)`
+
+Traverse every node in `root`.
+
+For each node:
+
+1. Check if the subtree rooted at that node is identical to `subRoot` using `sameTree()`.
+2. If not, recursively search the left subtree.
+3. If still not found, recursively search the right subtree.
+
+If any subtree matches, return `True`; otherwise return `False`.
+
+## Complexity
+- **Time Complexity:** O(m × n)
+- **Space Complexity:** O(m + n)
+
+Where:
+- `m` = number of nodes in `root`
+- `n` = number of nodes in `subRoot`
+
+In the worst case, `sameTree()` may compare up to `n` nodes for each of the `m` nodes in `root`.
+
+## Code
+```python
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution(object):
+    def isSubtree(self, root, subRoot):
+        def sameTree(p, q):
+            if not p and not q:
+                return True
+
+            if not p or not q or p.val != q.val:
+                return False
+
+            return (sameTree(p.left, q.left) and sameTree(p.right, q.right))
+
+        if not subRoot:
+            return True
+
+        if not root:
+            return False
+
+        if sameTree(root, subRoot):
+            return True
+
+        return (self.isSubtree(root.left, subRoot) or self.isSubtree(root.right, subRoot))
+```
