@@ -1,0 +1,49 @@
+# Invert Binary Tree
+
+## Difficulty
+Easy
+
+## Approach
+Use Depth-First Search (DFS) with recursion.
+
+For every node:
+
+1. Swap its left and right children.
+2. Recursively invert the left subtree.
+3. Recursively invert the right subtree.
+
+By applying this operation to every node, the entire tree becomes its mirror image.
+
+## Complexity
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(h)
+
+Where:
+- `n` is the number of nodes.
+- `h` is the height of the tree.
+
+In the worst case (skewed tree), the space complexity becomes O(n).
+
+## Code
+```python
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution(object):
+    def invertTree(self, root):
+        if not root:
+            return None
+
+        temp = root.left
+        root.left = root.right
+        root.right = temp
+
+        self.invertTree(root.left)
+        self.invertTree(root.right)
+
+        return root
+```
