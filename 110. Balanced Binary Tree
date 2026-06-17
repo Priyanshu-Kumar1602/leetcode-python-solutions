@@ -1,0 +1,71 @@
+# Balanced Binary Tree
+
+## Difficulty
+Easy
+
+## Approach
+Use a postorder DFS traversal to compute:
+
+1. Whether a subtree is balanced.
+2. The height of that subtree.
+
+For each node:
+
+- Recursively get the result from the left subtree.
+- Recursively get the result from the right subtree.
+- The current node is balanced if:
+  - The left subtree is balanced.
+  - The right subtree is balanced.
+  - The difference between their heights is at most 1.
+
+```text
+abs(left_height - right_height) <= 1
+```
+
+Return:
+
+```python
+[isBalanced, height]
+```
+
+where:
+
+```python
+height = 1 + max(left_height, right_height)
+```
+
+Since height information is returned while traversing upward, every node is processed only once.
+
+## Complexity
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(h)
+
+Where:
+- `n` is the number of nodes.
+- `h` is the height of the tree.
+
+In the worst case (skewed tree), the space complexity becomes O(n).
+
+## Code
+```python
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution(object):
+    def isBalanced(self, root):
+        def dfs(root):
+            if not root:
+                return [True, 0]
+
+            left = dfs(root.left)
+            right = dfs(root.right)
+
+            balanced = (left[0] and right[0] and abs(left[1] - right[1]) <= 1)
+            return [balanced, 1 + max(left[1], right[1])]
+    
+         return dfs(root)[0]
+```
