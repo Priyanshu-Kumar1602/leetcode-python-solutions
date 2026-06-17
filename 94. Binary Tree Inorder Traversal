@@ -1,0 +1,66 @@
+# Binary Tree Inorder Traversal
+
+## Difficulty
+Easy
+
+## Approach
+Use **Depth-First Search (DFS)** with recursion.
+
+In an inorder traversal, nodes are visited in the following order:
+
+```text
+Left → Root → Right
+```
+
+For every node:
+
+1. Traverse the left subtree.
+2. Visit the current node.
+3. Traverse the right subtree.
+
+## Complexity
+
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(h)
+
+Where:
+- `n` = number of nodes.
+- `h` = height of the tree.
+
+In the worst case (skewed tree):
+
+```text
+O(h) = O(n)
+```
+
+In a balanced tree:
+
+```text
+O(h) = O(log n)
+```
+
+## Code
+
+```python
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution(object):
+    def inorderTraversal(self, root):
+        output = []
+
+        def inorder(root):
+            if not root:
+                return
+
+            inorder(root.left)
+            output.append(root.val)
+            inorder(root.right)
+
+        inorder(root)
+        return output
+```
