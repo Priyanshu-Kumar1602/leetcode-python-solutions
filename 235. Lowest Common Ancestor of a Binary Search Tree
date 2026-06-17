@@ -1,0 +1,56 @@
+# Lowest Common Ancestor of a Binary Search Tree
+
+## Difficulty
+Medium
+
+## Approach
+Use the Binary Search Tree (BST) property.
+
+For the current node:
+
+- If both `p` and `q` have values greater than the current node, the LCA must be in the right subtree.
+- If both `p` and `q` have values smaller than the current node, the LCA must be in the left subtree.
+- Otherwise, the current node is the split point where one node lies on each side (or one node is the current node itself), making it the Lowest Common Ancestor.
+
+This allows us to traverse only one path from the root instead of searching the entire tree.
+
+## Complexity
+- **Time Complexity:** O(h)
+- **Space Complexity:** O(1)
+
+Where:
+- `h` is the height of the BST.
+
+For a balanced BST:
+
+```text
+O(h) = O(log n)
+```
+
+For a skewed BST:
+
+```text
+O(h) = O(n)
+```
+
+## Code
+```python
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution(object):
+    def lowestCommonAncestor(self, root, p, q):
+        curr = root
+
+        while curr:
+            if p.val > curr.val and q.val > curr.val:
+                curr = curr.right
+            elif p.val < curr.val and q.val < curr.val:
+                curr = curr.left
+            else:
+                return curr
+```
