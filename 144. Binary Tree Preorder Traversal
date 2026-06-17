@@ -1,0 +1,58 @@
+# Binary Tree Preorder Traversal
+
+## Difficulty
+Easy
+
+## Approach
+Use an iterative Depth-First Search (DFS) approach with a stack.
+
+Preorder traversal follows:
+
+```text
+Root → Left → Right
+```
+
+For each node:
+
+1. Visit the current node and add its value to the output.
+2. Store its right child on the stack.
+3. Move to its left child.
+4. When there is no left child, pop a saved right child from the stack and continue.
+
+This ensures that the left subtree is processed before the right subtree.
+
+## Complexity
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(h)
+
+Where:
+- `n` is the number of nodes.
+- `h` is the height of the tree.
+
+In the worst case (skewed tree), the space complexity becomes O(n).
+
+## Code
+```python
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution(object):
+    def preorderTraversal(self, root):
+        output = []
+        stack = []
+        curr = root
+
+        while curr or stack:
+            if curr:
+                output.append(curr.val)
+                stack.append(curr.right)
+                curr = curr.left
+            else:
+                curr = stack.pop()
+
+        return output
+```
