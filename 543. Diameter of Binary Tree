@@ -1,0 +1,63 @@
+# Diameter of Binary Tree
+
+## Difficulty
+Easy
+
+## Approach
+Use Depth-First Search (DFS) to compute the height of each subtree.
+
+For every node:
+
+- Compute the height of its left subtree.
+- Compute the height of its right subtree.
+- The longest path passing through the current node is:
+
+```text
+left_height + right_height
+```
+
+- Update the global diameter with the maximum value seen so far.
+- Return the height of the current subtree:
+
+```text
+1 + max(left_height, right_height)
+```
+
+The diameter is the number of edges in the longest path between any two nodes in the tree.
+
+## Complexity
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(h)
+
+Where:
+- `n` is the number of nodes.
+- `h` is the height of the tree.
+
+In the worst case (skewed tree), the space complexity becomes O(n).
+
+## Code
+```python
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution(object):
+    def diameterOfBinaryTree(self, root):
+        self.output = 0
+
+        def dfs(curr):
+            if not curr:
+                return 0
+
+            left = dfs(curr.left)
+            right = dfs(curr.right)
+
+            self.output = max(self.output, left + right)
+            return 1 + max(left, right)
+
+        dfs(root)
+        return self.output
+```
