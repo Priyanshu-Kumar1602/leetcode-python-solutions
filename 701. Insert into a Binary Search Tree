@@ -1,0 +1,64 @@
+# Insert into a Binary Search Tree
+
+## Difficulty
+Medium
+
+## Approach
+Use the Binary Search Tree (BST) property to find the correct insertion position.
+
+1. If the tree is empty, create and return a new node.
+2. Start from the root.
+3. If `val` is greater than the current node's value, move to the right subtree.
+4. Otherwise, move to the left subtree.
+5. When a `None` child is found, insert the new node there.
+6. Return the original root.
+
+Since we follow only one path from the root to a leaf, we never need to traverse the entire tree.
+
+## Complexity
+- **Time Complexity:** O(h)
+- **Space Complexity:** O(1)
+
+Where:
+- `h` is the height of the BST.
+
+For a balanced BST:
+
+```text
+O(h) = O(log n)
+```
+
+For a skewed BST:
+
+```text
+O(h) = O(n)
+```
+
+## Code
+```python
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution(object):
+    def insertIntoBST(self, root, val):
+        if not root:
+            return TreeNode(val)
+
+        curr = root
+
+        while True:
+            if val > curr.val:
+                if not curr.right:
+                    curr.right = TreeNode(val)
+                    return root
+                curr = curr.right
+            else:
+                if not curr.left:
+                    curr.left = TreeNode(val)
+                    return root
+                curr = curr.left
+```
