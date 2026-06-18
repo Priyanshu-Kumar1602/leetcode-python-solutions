@@ -4,29 +4,38 @@
 Medium
 
 ## Approach
-Use an inorder traversal of the Binary Search Tree (BST).
+Use an iterative inorder traversal.
 
-A BST has the property that an inorder traversal visits nodes in sorted order:
+A Binary Search Tree (BST) has the property that an inorder traversal visits nodes in ascending order:
 
 ```text
 Left → Root → Right
 ```
 
+Instead of storing all values, traverse the tree iteratively using a stack and count the nodes as they are visited.
+
 Steps:
 
-1. Perform an inorder traversal.
-2. Store the visited values in a list.
-3. Since the values are collected in ascending order, the `(k - 1)`-th index contains the kth smallest element.
-4. Return that value.
+1. Move as far left as possible, pushing nodes onto the stack.
+2. Pop the next node from the stack.
+3. Increment a counter since this node is the next smallest element.
+4. When the counter reaches `k`, return the node's value.
+5. Move to the node's right subtree and continue.
+
+This avoids storing the entire inorder traversal.
 
 ## Complexity
-- **Time Complexity:** O(n)
-- **Space Complexity:** O(n)
+- **Time Complexity:** O(h + k)
+- **Space Complexity:** O(h)
 
 Where:
-- `n` is the number of nodes in the tree.
+- `h` is the height of the BST.
 
-The list stores all node values.
+In the worst case:
+- Time Complexity becomes O(n).
+- Space Complexity becomes O(n) for a skewed tree.
+
+This is more space-efficient than storing the entire inorder traversal, which requires O(n) extra space.
 
 ## Code
 ```python
@@ -39,16 +48,20 @@ The list stores all node values.
 
 class Solution(object):
     def kthSmallest(self, root, k):
-        output = []
+        n = 0
+        stack = []
+        curr = root
 
-        def inorder(root):
-            if not root:
-                return
+        while curr or stack:
+            while curr:
+                stack.append(curr)
+                curr = curr.left
 
-            inorder(root.left)
-            output.append(root.val)
-            inorder(root.right)
+            curr = stack.pop()
+            n += 1
 
-        inorder(root)
-        return output[k - 1]
+            if n == k:
+                return curr.val
+
+            curr = curr.right
 ```
