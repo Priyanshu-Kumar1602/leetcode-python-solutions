@@ -1,0 +1,69 @@
+# Validate Binary Search Tree
+
+## Difficulty
+Medium
+
+## Approach
+Use DFS while maintaining the valid range of values for each node.
+
+For a BST:
+
+- Every node in the left subtree must be **less than** the current node.
+- Every node in the right subtree must be **greater than** the current node.
+
+Instead of comparing only with the parent, pass down the allowed range:
+
+```text
+(left_bound, right_bound)
+```
+
+For each node:
+
+1. Check if its value lies within the valid range.
+2. Recursively validate the left subtree with:
+   ```text
+   (left_bound, node.val)
+   ```
+3. Recursively validate the right subtree with:
+   ```text
+   (node.val, right_bound)
+   ```
+
+If any node violates the range constraint, the tree is not a valid BST.
+
+## Complexity
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(h)
+
+Where:
+- `n` is the number of nodes.
+- `h` is the height of the tree.
+
+In the worst case (skewed tree), the recursion stack uses O(n) space.
+
+## Code
+```python
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution(object):
+    def isValidBST(self, root):
+        def dfs(node, left, right):
+            if not node:
+                return True
+
+            if not (left < node.val < right):
+                return False
+
+            return (
+                dfs(node.left, left, node.val)
+                and
+                dfs(node.right, node.val, right)
+            )
+
+        return dfs(root, float("-inf"), float("inf"))
+```
