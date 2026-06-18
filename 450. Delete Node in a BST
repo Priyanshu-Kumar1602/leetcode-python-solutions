@@ -1,0 +1,120 @@
+# Delete Node in a BST
+
+## Difficulty
+Medium
+
+## Approach
+Use recursion to locate the node with the given key.
+
+There are three cases when the node is found:
+
+### 1. No Left Child
+
+Replace the node with its right child.
+
+```text
+    5
+     \
+      7
+```
+
+Delete `5`:
+
+```text
+    7
+```
+
+### 2. No Right Child
+
+Replace the node with its left child.
+
+```text
+      5
+     /
+    3
+```
+
+Delete `5`:
+
+```text
+    3
+```
+
+### 3. Two Children
+
+Find the inorder successor (smallest node in the right subtree).
+
+```text
+        5
+       / \
+      3   8
+         /
+        6
+```
+
+The inorder successor is `6`.
+
+Steps:
+
+1. Copy the successor's value into the current node.
+2. Delete the successor from the right subtree.
+
+This preserves the BST property.
+
+## Complexity
+- **Time Complexity:** O(h)
+- **Space Complexity:** O(h)
+
+Where:
+- `h` is the height of the BST.
+
+For a balanced BST:
+
+```text
+O(h) = O(log n)
+```
+
+For a skewed BST:
+
+```text
+O(h) = O(n)
+```
+
+The space complexity comes from the recursive call stack.
+
+## Code
+```python
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution(object):
+    def deleteNode(self, root, key):
+        if not root:
+            return None
+
+        if key < root.val:
+            root.left = self.deleteNode(root.left, key)
+
+        elif key > root.val:
+            root.right = self.deleteNode(root.right, key)
+
+        else:
+            if not root.left:
+                return root.right
+
+            if not root.right:
+                return root.left
+
+            curr = root.right
+            while curr.left:
+                curr = curr.left
+
+            root.val = curr.val
+            root.right = self.deleteNode(root.right, curr.val)
+
+        return root
+```
