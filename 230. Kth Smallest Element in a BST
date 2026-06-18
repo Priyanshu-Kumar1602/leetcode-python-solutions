@@ -1,0 +1,54 @@
+# Kth Smallest Element in a BST
+
+## Difficulty
+Medium
+
+## Approach
+Use an inorder traversal of the Binary Search Tree (BST).
+
+A BST has the property that an inorder traversal visits nodes in sorted order:
+
+```text
+Left → Root → Right
+```
+
+Steps:
+
+1. Perform an inorder traversal.
+2. Store the visited values in a list.
+3. Since the values are collected in ascending order, the `(k - 1)`-th index contains the kth smallest element.
+4. Return that value.
+
+## Complexity
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(n)
+
+Where:
+- `n` is the number of nodes in the tree.
+
+The list stores all node values.
+
+## Code
+```python
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution(object):
+    def kthSmallest(self, root, k):
+        output = []
+
+        def inorder(root):
+            if not root:
+                return
+
+            inorder(root.left)
+            output.append(root.val)
+            inorder(root.right)
+
+        inorder(root)
+        return output[k - 1]
+```
