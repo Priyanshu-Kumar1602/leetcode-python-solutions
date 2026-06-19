@@ -1,0 +1,71 @@
+# House Robber III
+
+## Difficulty
+Medium
+
+## Approach
+Use DFS with dynamic programming on the tree.
+
+For each node, compute two values:
+
+```text
+[withRoot, withoutRoot]
+```
+
+- `withRoot`: Maximum money if we rob the current node.
+- `withoutRoot`: Maximum money if we do not rob the current node.
+
+### Transition
+
+If we rob the current node, we cannot rob its children:
+
+```text
+withRoot = root.val + left.withoutRoot + right.withoutRoot
+```
+
+If we do not rob the current node, we can choose the best option for each child:
+
+```text
+withoutRoot = max(left) + max(right)
+```
+
+The answer for the tree is:
+
+```text
+max(withRoot, withoutRoot)
+```
+## Complexity
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(h)
+
+Where:
+- `n` = number of nodes.
+- `h` = height of the tree.
+
+Each node is visited exactly once.
+
+## Code
+```python
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution(object):
+    def rob(self, root):
+        def dfs(root):
+            if not root:
+                return [0, 0]  # [withRoot, withoutRoot]
+
+            leftPair = dfs(root.left)
+            rightPair = dfs(root.right)
+
+            withRoot = root.val + leftPair[1] + rightPair[1]
+            withoutRoot = max(leftPair) + max(rightPair)
+
+            return [withRoot, withoutRoot]
+
+        return max(dfs(root))
+```
