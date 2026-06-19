@@ -1,0 +1,83 @@
+# Binary Tree Maximum Path Sum
+
+## Difficulty
+Hard
+
+## Approach
+Use DFS and, for each node, compute the maximum path sum that can be extended to its parent.
+
+A path can:
+
+- Start and end at any nodes.
+- Travel through parent-child connections.
+- Cannot revisit a node.
+
+### Key Idea
+
+For every node:
+
+1. Compute the maximum path sum from the left subtree.
+2. Compute the maximum path sum from the right subtree.
+3. Ignore negative contributions since they would decrease the path sum.
+
+```python
+leftMax = max(dfs(root.left), 0)
+rightMax = max(dfs(root.right), 0)
+```
+
+4. Consider a path passing through the current node:
+
+```text
+root.val + leftMax + rightMax
+```
+
+This path may use both children and could be the global maximum.
+
+5. Return the best single branch to the parent:
+
+```text
+root.val + max(leftMax, rightMax)
+```
+
+Since a parent can only continue one branch, we cannot return both sides.
+
+## Complexity
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(h)
+
+Where:
+- `n` is the number of nodes.
+- `h` is the height of the tree.
+
+Each node is visited exactly once.
+
+## Code
+```python
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution(object):
+    def maxPathSum(self, root):
+        output = [root.val]
+
+        def dfs(root):
+            if not root:
+                return 0
+
+            leftMax = dfs(root.left)
+            rightMax = dfs(root.right)
+
+            leftMax = max(leftMax, 0)
+            rightMax = max(rightMax, 0)
+
+            output[0] = max(output[0],root.val + leftMax + rightMax)
+
+            return root.val + max(leftMax, rightMax)
+
+        dfs(root)
+        return output[0]
+```
