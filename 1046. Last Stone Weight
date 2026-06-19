@@ -1,0 +1,59 @@
+# Last Stone Weight
+
+## Difficulty
+Easy
+
+## Approach
+Use a max heap to repeatedly remove the two heaviest stones.
+
+Since Python's `heapq` implements a min heap, store the negative values of the stones to simulate a max heap.
+
+### Algorithm
+
+1. Convert all stone weights to negative values.
+2. Build a heap.
+3. While there are at least two stones:
+   - Remove the two largest stones.
+   - If they have different weights, insert their difference back into the heap.
+4. If one stone remains, return its weight.
+5. Otherwise, return `0`.
+
+## Complexity
+- **Time Complexity:** O(n log n)
+- **Space Complexity:** O(n)
+
+Where:
+- `n` is the number of stones.
+
+Heap construction:
+
+```text
+O(n)
+```
+
+Each pop/push operation:
+
+```text
+O(log n)
+```
+
+and there can be up to `n` iterations.
+
+## Code
+```python
+import heapq
+
+class Solution(object):
+    def lastStoneWeight(self, stones):
+        stones = [-i for i in stones]
+        heapq.heapify(stones)
+
+        while len(stones) > 1:
+            a = -heapq.heappop(stones)
+            b = -heapq.heappop(stones)
+
+            if a != b:
+                heapq.heappush(stones, -abs(a - b))
+
+        return -heapq.heappop(stones) if len(stones) == 1 else 0
+```
