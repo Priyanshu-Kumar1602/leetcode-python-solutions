@@ -1,0 +1,43 @@
+# Kth Largest Element in an Array
+
+## Difficulty
+Medium
+
+## Approach
+Use a min heap of size `k` to keep track of the `k` largest elements seen so far.
+
+For each number:
+
+1. Insert it into the heap.
+2. If the heap size exceeds `k`, remove the smallest element.
+
+After processing all numbers:
+
+- The heap contains exactly the `k` largest elements.
+- The smallest element in the heap is the kth largest element overall.
+
+## Complexity
+- **Time Complexity:** O(n log k)
+- **Space Complexity:** O(k)
+
+Where:
+- `n` is the length of the array.
+
+The heap never grows beyond size `k`, so each insertion/removal costs `O(log k)`.
+
+## Code
+```python
+import heapq
+
+class Solution(object):
+    def findKthLargest(self, nums, k):
+        minHeap = []
+
+        for i in nums:
+            heapq.heappush(minHeap, i)
+
+            if len(minHeap) > k:
+                heapq.heappop(minHeap)
+
+        return minHeap[0]
+```
