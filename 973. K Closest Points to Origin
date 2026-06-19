@@ -1,0 +1,45 @@
+# K Closest Points to Origin
+
+## Difficulty
+Medium
+
+## Approach
+Use a max heap of size `k` to keep track of the `k` closest points seen so far.
+
+For each point:
+
+1. Compute its squared distance from the origin.
+2. Insert `(-distance, point)` into the heap.
+3. If the heap size exceeds `k`, remove the farthest point.
+
+Using negative distances allows Python's min heap (`heapq`) to behave like a max heap.
+
+At the end, the heap contains exactly the `k` closest points.
+
+## Complexity
+- **Time Complexity:** O(n log k)
+- **Space Complexity:** O(k)
+
+Where:
+- `n` is the number of points.
+
+The heap never grows beyond size `k`, so each insertion/removal costs `O(log k)`.
+
+## Code
+```python
+import heapq
+
+class Solution(object):
+    def kClosest(self, points, k):
+        maxHeap = []
+
+        for x, y in points:
+            dist = x * x + y * y
+
+            heapq.heappush(maxHeap, (-dist, [x, y]))
+
+            if len(maxHeap) > k:
+                heapq.heappop(maxHeap)
+
+        return [point for dist, point in maxHeap]
+```
