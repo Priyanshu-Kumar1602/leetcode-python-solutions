@@ -1,0 +1,114 @@
+# Serialize and Deserialize Binary Tree
+
+## Difficulty
+Hard
+
+## Approach
+Use a preorder DFS traversal and include markers for null nodes.
+
+### Serialization
+
+Traverse the tree in:
+
+```text
+Root → Left → Right
+```
+
+For each node:
+
+- Append its value to the output.
+- If the node is `None`, append `"N"`.
+
+This preserves the exact tree structure.
+
+### Deserialization
+
+Read the serialized values in preorder order.
+
+For each value:
+
+- If it is `"N"`, return `None`.
+- Otherwise:
+  - Create a node.
+  - Recursively build its left subtree.
+  - Recursively build its right subtree.
+
+A pointer (`self.i`) keeps track of the current position in the array.
+
+### Why It Works
+
+The preorder traversal determines:
+
+```text
+Root → Left → Right
+```
+
+and the `"N"` markers tell us exactly where each subtree ends.
+
+Without null markers, trees such as:
+
+```text
+1        1
+ \      /
+  2    2
+```
+
+would serialize identically.
+
+The `"N"` markers remove this ambiguity.
+
+## Complexity
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(n)
+
+Where:
+- `n` is the number of nodes.
+
+Each node is visited exactly once during serialization and deserialization.
+
+## Code
+```python
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Codec:
+    # Encodes a tree to a single string.
+    def serialize(self, root):
+        output = []
+
+        def dfs(root):
+            if not root:
+                output.append("N")
+                return
+
+            output.append(str(root.val))
+            dfs(root.left)
+            dfs(root.right)
+
+        dfs(root)
+        return ",".join(output)
+
+    # Decodes your encoded data to tree.
+    def deserialize(self, data):
+        values = data.split(",")
+        self.i = 0
+
+        def dfs():
+            if values[self.i] == "N":
+                self.i += 1
+                return None
+
+            root = TreeNode(int(values[self.i]))
+            self.i += 1
+
+            root.left = dfs()
+            root.right = dfs()
+
+            return root
+
+        return dfs()
+```
