@@ -1,0 +1,78 @@
+# Kth Largest Element in a Stream
+
+## Difficulty
+Easy
+
+## Approach
+Maintain a min heap of size `k`.
+
+The heap always stores the `k` largest elements seen so far.
+
+### Key Idea
+
+- If the heap contains more than `k` elements, remove the smallest one.
+- After processing all values, the heap contains exactly the `k` largest elements.
+- The root of the min heap is the kth largest element.
+
+### Initialization
+
+Insert all numbers from `nums` into the heap.
+
+Whenever the heap size exceeds `k`:
+
+```python
+heapq.heappop(self.minHeap)
+```
+
+This removes the smallest element and keeps only the `k` largest values.
+
+### Add Operation
+
+When a new value arrives:
+
+1. Insert it into the heap.
+2. If the heap size exceeds `k`, remove the smallest element.
+3. Return the root of the heap.
+
+The root is always the kth largest element in the stream.
+
+## Complexity
+
+### Constructor
+
+Let `n` be the length of `nums`.
+
+- **Time Complexity:** O(n log k)
+- **Space Complexity:** O(k)
+
+### add(val)
+
+- **Time Complexity:** O(log k)
+- **Space Complexity:** O(1)
+
+The heap size never exceeds `k`.
+
+## Code
+```python
+import heapq
+
+class KthLargest(object):
+
+    def __init__(self, k, nums):
+        self.minHeap = []
+        self.k = k
+
+        for n in nums:
+            heapq.heappush(self.minHeap, n)
+
+            if len(self.minHeap) > self.k:
+                heapq.heappop(self.minHeap)
+
+    def add(self, val):
+        heapq.heappush(self.minHeap, val)
+
+        if len(self.minHeap) > self.k:
+            heapq.heappop(self.minHeap)
+
+        return self.minHeap[0]
+```
