@@ -1,0 +1,94 @@
+# Car Pooling
+
+## Difficulty
+Medium
+
+## Approach
+Use a min heap to track passengers currently in the car.
+
+### Key Idea
+
+Each trip is represented as:
+
+```text
+[numPassengers, startLocation, endLocation]
+```
+
+Before picking up new passengers at a location:
+
+- Remove all trips that have already ended.
+- Subtract their passengers from the current passenger count.
+
+Then:
+
+- Add the new passengers.
+- Check whether the car's capacity is exceeded.
+
+### Data Structures
+
+- **Min Heap**
+
+Stores:
+
+```text
+[endLocation, numPassengers]
+```
+
+The heap allows us to efficiently remove passengers whose trips end first.
+
+### Algorithm
+
+1. Sort trips by starting location.
+2. For each trip:
+   - Remove all completed trips from the heap.
+   - Update the current passenger count.
+   - Add the new passengers.
+   - If capacity is exceeded, return `False`.
+   - Push the trip into the heap.
+3. If all trips are processed successfully, return `True`.
+
+## Complexity
+- **Time Complexity:** O(n log n)
+- **Space Complexity:** O(n)
+
+Where:
+- `n` is the number of trips.
+
+Operations:
+
+- Sorting trips → O(n log n)
+- Each trip is pushed and popped from the heap at most once → O(n log n)
+
+Overall:
+
+```text
+O(n log n)
+```
+
+## Code
+```python
+import heapq
+
+class Solution(object):
+    def carPooling(self, trips, capacity):
+        trips.sort(key=lambda t: t[1])
+
+        minHeap = []  # [endLocation, numPassengers]
+        currPass = 0
+
+        for t in trips:
+            numPass, start, end = t
+
+            while minHeap and minHeap[0][0] <= start:
+                currPass -= minHeap[0][1]
+                heapq.heappop(minHeap)
+
+            currPass += numPass
+
+            if currPass > capacity:
+                return False
+
+            heapq.heappush(minHeap, [end, numPass])
+
+        return True
+```
