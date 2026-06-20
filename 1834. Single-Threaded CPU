@@ -1,0 +1,96 @@
+# Single-Threaded CPU
+
+## Difficulty
+Medium
+
+## Approach
+Use sorting and a min heap to simulate how a single-threaded CPU processes tasks.
+
+### Key Idea
+
+Each task is represented as:
+
+```text
+[enqueueTime, processingTime]
+```
+
+The CPU:
+
+1. Can only process one task at a time.
+2. Chooses the available task with the smallest processing time.
+3. If there is a tie, chooses the task with the smaller original index.
+4. If no tasks are available, jumps forward to the next enqueue time.
+
+### Algorithm
+
+1. Attach each task's original index.
+2. Sort tasks by enqueue time.
+3. Maintain:
+   - A pointer `i` for tasks not yet added to the heap.
+   - A min heap storing:
+
+```text
+[processingTime, index]
+```
+4. Add all tasks whose enqueue time is less than or equal to the current time.
+5. If the heap is empty:
+   - Jump the clock to the next task's enqueue time.
+6. Otherwise:
+   - Execute the task with the smallest processing time.
+   - Advance the current time by its processing time.
+   - Record its index.
+7. Continue until all tasks are processed.
+
+## Complexity
+- **Time Complexity:** O(n log n)
+- **Space Complexity:** O(n)
+
+Where:
+- `n` is the number of tasks.
+
+Operations:
+- Sorting → O(n log n)
+- Each task is pushed and popped from the heap exactly once → O(n log n)
+
+Overall:
+
+```text
+O(n log n)
+```
+
+## Code
+```python
+import heapq
+
+class Solution(object):
+    def getOrder(self, tasks):
+        for i, t in enumerate(tasks):
+            t.append(i)
+
+        tasks.sort(key=lambda t: t[0])
+
+        output = []
+        minHeap = []
+
+        i = 0
+        time = tasks[0][0]
+
+        while minHeap or i < len(tasks):
+
+            while i < len(tasks) and time >= tasks[i][0]:
+                heapq.heappush(
+                    minHeap,
+                    [tasks[i][1], tasks[i][2]]
+                )
+                i += 1
+
+            if not minHeap:
+                time = tasks[i][0]
+
+            else:
+                procTime, index = heapq.heappop(minHeap)
+                time += procTime
+                output.append(index)
+
+        return output
+```
