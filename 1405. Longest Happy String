@@ -1,0 +1,95 @@
+# Longest Happy String
+
+## Difficulty
+Medium
+
+## Approach
+Use a max heap to always choose the character with the highest remaining frequency while ensuring that no three consecutive characters are the same.
+
+### Key Idea
+
+At each step:
+
+1. Pick the character with the largest remaining count.
+2. If adding it would create three consecutive identical characters:
+   - Use the second most frequent character instead.
+3. Reinsert any character that still has remaining occurrences.
+
+This greedy strategy ensures the resulting string is as long as possible.
+
+### Data Structures
+
+- **Max Heap**
+  - Stores:
+
+```text
+[count, character]
+```
+
+  - Counts are stored as negative values because Python's `heapq` is a min heap.
+
+### Why It Works
+
+Whenever the most frequent character would violate the rule:
+
+```text
+xxx
+```
+
+we temporarily use the next best available character.
+
+This preserves as many high-frequency characters as possible while maintaining validity.
+
+## Complexity
+- **Time Complexity:** O((a+b+c) log 3)
+- **Space Complexity:** O(1)
+
+Since there are only three possible characters (`a`, `b`, `c`), the heap size never exceeds 3.
+
+Thus:
+
+```text
+log 3 = O(1)
+```
+and the overall time complexity becomes: 
+
+```text
+O(a + b + c)
+```
+
+## Code
+```python
+import heapq
+
+class Solution(object):
+    def longestDiverseString(self, a, b, c):
+        output = ""
+        maxHeap = []
+
+        for cnt, char in [[-a, "a"], [-b, "b"], [-c, "c"]]:
+            if cnt:
+                heapq.heappush(maxHeap, [cnt, char])
+
+        while maxHeap:
+            count, ch = heapq.heappop(maxHeap)
+
+            if len(output) > 1 and output[-1] == output[-2] == ch:
+                if not maxHeap:
+                    break
+
+                count2, ch2 = heapq.heappop(maxHeap)
+                count2 += 1
+                output += ch2
+
+                if count2:
+                    heapq.heappush(maxHeap, [count2, ch2])
+
+            else:
+                count += 1
+                output += ch
+
+            if count:
+                heapq.heappush(maxHeap, [count, ch])
+            
+        return output
+```
