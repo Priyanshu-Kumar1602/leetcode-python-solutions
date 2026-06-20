@@ -1,0 +1,76 @@
+# Task Scheduler
+
+## Difficulty
+Medium
+
+## Approach
+Use a max heap to always execute the task with the highest remaining frequency and a queue to track tasks in their cooldown period.
+
+### Data Structures
+
+- **Max Heap**
+  - Stores the remaining frequencies of available tasks.
+  - Negative values are used because Python's `heapq` is a min heap.
+
+- **Queue**
+  - Stores tasks that are cooling down.
+  - Each entry contains:
+
+```text
+[remainingCount, availableTime]
+```
+
+where:
+- `remainingCount` = remaining executions (negative count)
+- `availableTime` = earliest time the task can be scheduled again
+
+### Algorithm
+
+1. Count the frequency of each task.
+2. Insert all frequencies into a max heap.
+3. For each unit of time:
+   - Execute the most frequent available task.
+   - Decrease its remaining count.
+   - If more executions remain, place it in the cooldown queue.
+4. If a task's cooldown expires, move it back into the heap.
+5. Continue until both the heap and queue are empty.
+
+## Complexity
+- **Time Complexity:** O(T log U)
+- **Space Complexity:** O(U)
+
+Where:
+- `T` = total intervals in the schedule.
+- `U` = number of unique task types.
+
+Each task is pushed and popped from the heap a constant number of times, and each heap operation costs `O(log U)`.
+
+## Code
+```python
+from collections import Counter, deque
+import heapq
+
+class Solution(object):
+    def leastInterval(self, tasks, n):
+        count = Counter(tasks)
+
+        maxHeap = [-c for c in count.values()]
+        heapq.heapify(maxHeap)
+
+        time = 0
+        q = deque()  # [remainingCount, availableTime]
+
+        while maxHeap or q:
+            time += 1
+
+            if maxHeap:
+                cnt = 1 + heapq.heappop(maxHeap)
+
+                if cnt:
+                    q.append([cnt, time + n])
+
+            if q and q[0][1] == time:
+                heapq.heappush(maxHeap, q.popleft()[0])
+
+        return time
+```
