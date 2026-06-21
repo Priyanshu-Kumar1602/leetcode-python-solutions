@@ -1,0 +1,74 @@
+# Island Perimeter
+
+## Difficulty
+Easy
+
+## Approach
+Use DFS to traverse the island and count how many edges contribute to the perimeter.
+
+### Key Idea
+
+For each land cell:
+
+- If a neighboring cell is water, it contributes **1** to the perimeter.
+- If we move outside the grid boundary, it also contributes **1** to the perimeter.
+- If a neighboring land cell has already been visited, it contributes **0** because that edge is internal.
+
+### DFS Logic
+
+```text
+Water or Out of Bounds -> +1 perimeter
+Visited Land           -> +0 perimeter
+Unvisited Land         -> Explore 4 directions
+```
+
+The total perimeter is the sum of contributions from all recursive calls.
+
+### Why It Works
+
+Every side of a land cell is examined exactly once:
+
+- Water side → contributes 1.
+- Boundary side → contributes 1.
+- Shared side with another land cell → contributes 0.
+
+Thus the total count equals the island's perimeter.
+
+## Complexity
+- **Time Complexity:** O(m × n)
+- **Space Complexity:** O(m × n)
+
+Where:
+- `m` = number of rows
+- `n` = number of columns
+
+Each land cell is visited at most once.
+
+## Code
+```python
+class Solution(object):
+    def islandPerimeter(self, grid):
+        visit = set()
+
+        def dfs(i, j):
+            if (i >= len(grid) or i < 0 or j >= len(grid[0]) or j < 0 or grid[i][j] == 0):
+                return 1
+
+            if (i, j) in visit:
+                return 0
+
+            visit.add((i, j))
+
+            peri = 0
+            peri += dfs(i, j + 1)
+            peri += dfs(i, j - 1)
+            peri += dfs(i + 1, j)
+            peri += dfs(i - 1, j)
+
+            return peri
+
+        for i in range(len(grid)):
+            for j in range(len(grid[0])):
+                if grid[i][j]:
+                    return dfs(i, j)
+```
