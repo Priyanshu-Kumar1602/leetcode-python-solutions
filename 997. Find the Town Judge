@@ -1,0 +1,81 @@
+# Find the Town Judge
+
+## Difficulty
+Easy
+
+## Approach
+Use two arrays to track:
+
+- How many people each person trusts (**outgoing trust**).
+- How many people trust each person (**incoming trust**).
+
+### Key Observation
+
+The town judge must satisfy:
+
+1. Trusts nobody.
+
+```text
+outgoingTrust = 0
+```
+
+2. Is trusted by everyone else.
+
+```text
+incomingTrust = n - 1
+```
+
+Therefore, after counting all trust relationships, the judge is the person whose:
+
+```text
+outgoingTrust == 0
+incomingTrust == n - 1
+```
+
+### Algorithm
+
+1. Create two arrays:
+   - `outgoing`
+   - `incoming`
+2. Traverse every trust pair:
+   - Increment outgoing trust for the source.
+   - Increment incoming trust for the destination.
+3. Scan all people from `1` to `n`.
+4. Return the person satisfying the judge conditions.
+5. If no such person exists, return `-1`.
+
+## Complexity
+- **Time Complexity:** O(n + m)
+- **Space Complexity:** O(n)
+
+Where:
+- `n` = number of people
+- `m` = number of trust relationships
+
+Operations:
+- Process each trust pair once → O(m)
+- Scan all people once → O(n)
+
+Overall:
+
+```text
+O(n + m)
+```
+
+## Code
+```python
+class Solution(object):
+    def findJudge(self, n, trust):
+        outgoing = [0] * (n + 1)
+        incoming = [0] * (n + 1)
+
+        for src, dst in trust:
+            outgoing[src] += 1
+            incoming[dst] += 1
+
+        for i in range(1, n + 1):
+            if outgoing[i] == 0 and incoming[i] == n - 1:
+                return i
+
+        return -1
+```
