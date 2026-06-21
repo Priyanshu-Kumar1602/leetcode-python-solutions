@@ -1,0 +1,76 @@
+# Rotting Oranges
+
+## Difficulty
+Medium
+
+## Approach
+Use **Multi-Source BFS** starting from all initially rotten oranges.
+
+### Key Idea
+
+Every rotten orange spreads rot to its adjacent fresh oranges in one minute.
+
+Instead of processing each rotten orange separately:
+
+1. Add all rotten oranges (`2`) to the queue.
+2. Count the number of fresh oranges (`1`).
+3. Perform BFS level by level.
+4. Each BFS level represents one minute.
+5. Convert adjacent fresh oranges into rotten oranges and add them to the queue.
+
+The process ends when:
+- All fresh oranges have rotted, or
+- No more oranges can be reached.
+
+## Complexity
+
+- **Time Complexity:** O(m × n)
+- **Space Complexity:** O(m × n)
+
+Where:
+- `m` = number of rows
+- `n` = number of columns
+
+Each cell is processed at most once.
+
+## Code
+
+```python
+from collections import deque
+
+class Solution(object):
+    def orangesRotting(self, grid):
+        rows, cols = len(grid), len(grid[0])
+
+        fresh = 0
+        q = deque()
+
+        for i in range(rows):
+            for j in range(cols):
+                if grid[i][j] == 1:
+                    fresh += 1
+
+                if grid[i][j] == 2:
+                    q.append((i, j))
+
+        time = 0
+
+        while q and fresh > 0:
+            for i in range(len(q)):
+                r, c = q.popleft()
+
+                directions = [[1, 0],[0, 1],[-1, 0],[0, -1]]
+                for dr, dc in directions:
+                    row, col = r + dr, c + dc
+
+                    if (row < 0 or row >= rows or col < 0 or col >= cols or grid[row][col] != 1):
+                        continue
+
+                    grid[row][col] = 2
+                    fresh -= 1
+                    q.append((row, col))
+
+            time += 1
+
+        return time if fresh == 0 else -1
+```
