@@ -4,47 +4,47 @@
 Easy
 
 ## Approach
-Use two arrays to track:
+Use a single score array to track the trust balance of each person.
 
-- How many people each person trusts (**outgoing trust**).
-- How many people trust each person (**incoming trust**).
+### Key Idea
 
-### Key Observation
-
-The town judge must satisfy:
-
-1. Trusts nobody.
+For every trust relationship:
 
 ```text
-outgoingTrust = 0
+src -> dst
 ```
 
-2. Is trusted by everyone else.
+- The source trusts someone, so decrease their score by 1.
+- The destination is trusted by someone, so increase their score by 1.
 
-```text
-incomingTrust = n - 1
+```python
+delta[src] -= 1
+delta[dst] += 1
 ```
 
-Therefore, after counting all trust relationships, the judge is the person whose:
+A town judge:
+
+- Trusts nobody.
+- Is trusted by every other person.
+
+Therefore, the judge's score will be:
 
 ```text
-outgoingTrust == 0
-incomingTrust == n - 1
+n - 1
 ```
 
 ### Algorithm
 
-1. Create two arrays:
-   - `outgoing`
-   - `incoming`
-2. Traverse every trust pair:
-   - Increment outgoing trust for the source.
-   - Increment incoming trust for the destination.
-3. Scan all people from `1` to `n`.
-4. Return the person satisfying the judge conditions.
-5. If no such person exists, return `-1`.
+1. Create a score array `delta`.
+2. Process every trust pair:
+   - Decrement the source's score.
+   - Increment the destination's score.
+3. Scan all people.
+4. Return the person whose score equals `n - 1`.
+5. If none exists, return `-1`.
 
 ## Complexity
+
 - **Time Complexity:** O(n + m)
 - **Space Complexity:** O(n)
 
@@ -52,29 +52,19 @@ Where:
 - `n` = number of people
 - `m` = number of trust relationships
 
-Operations:
-- Process each trust pair once → O(m)
-- Scan all people once → O(n)
-
-Overall:
-
-```text
-O(n + m)
-```
-
 ## Code
+
 ```python
 class Solution(object):
     def findJudge(self, n, trust):
-        outgoing = [0] * (n + 1)
-        incoming = [0] * (n + 1)
+        delta = [0] * (n + 1)
 
         for src, dst in trust:
-            outgoing[src] += 1
-            incoming[dst] += 1
+            delta[src] -= 1
+            delta[dst] += 1
 
         for i in range(1, n + 1):
-            if outgoing[i] == 0 and incoming[i] == n - 1:
+            if delta[i] == n - 1:
                 return i
 
         return -1
