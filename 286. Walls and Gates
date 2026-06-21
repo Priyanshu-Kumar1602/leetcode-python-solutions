@@ -1,0 +1,77 @@
+# Walls and Gates
+
+## Difficulty
+Medium
+
+## Approach
+Use **Multi-Source BFS** starting from all gates (`0`) simultaneously.
+
+### Key Idea
+
+Instead of running BFS from every empty room, start BFS from every gate.
+
+Since BFS explores level by level:
+
+- Cells reached first receive the shortest distance to a gate.
+- Each BFS level represents one additional step away from a gate.
+
+### Algorithm
+
+1. Add all gates (`0`) to the queue.
+2. Mark them as visited.
+3. Perform BFS:
+   - Process one level at a time.
+   - Set each room's distance to the current level.
+   - Add valid neighboring rooms to the queue.
+4. Continue until the queue becomes empty.
+
+## Complexity
+
+- **Time Complexity:** O(m × n)
+- **Space Complexity:** O(m × n)
+
+Where:
+- `m` = number of rows
+- `n` = number of columns
+
+Each cell is visited at most once.
+
+## Code
+
+```python
+from collections import deque
+
+class Solution:
+    def islandsAndTreasure(self, grid: List[List[int]]) -> None:
+        rows, cols = len(grid), len(grid[0])
+
+        visit = set()
+        q = deque()
+
+        def addRooms(i, j):
+            if (i < 0 or i >= rows or j < 0 or j >= cols or (i, j) in visit or grid[i][j] == -1):
+                return
+            visit.add((i, j))
+            q.append((i, j))
+
+        for i in range(rows):
+            for j in range(cols):
+                if grid[i][j] == 0:
+                    visit.add((i, j))
+                    q.append((i, j))
+
+        dist = 0
+
+        while q:
+            qlen = len(q)
+            for i in range(qlen):
+                r, c = q.popleft()
+                grid[r][c] = dist
+
+                addRooms(r + 1, c)
+                addRooms(r - 1, c)
+                addRooms(r, c + 1)
+                addRooms(r, c - 1)
+
+            dist += 1
+```
