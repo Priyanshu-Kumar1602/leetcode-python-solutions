@@ -1,0 +1,75 @@
+# Max Area of Island
+
+## Difficulty
+Medium
+
+## Approach
+Use Depth-First Search (DFS) to explore each island and calculate its area.
+
+### Key Idea
+
+For every land cell (`1`):
+
+1. Start a DFS.
+2. Mark the current cell as visited by changing it to `0`.
+3. Recursively explore all four directions.
+4. Return the total number of connected land cells.
+
+The maximum area encountered during the traversal is the answer.
+
+### DFS Logic
+
+```text
+Water / Out of Bounds -> 0
+
+Land Cell ->
+    Mark as visited
+    Area =
+        1
+        + DFS(up)
+        + DFS(down)
+        + DFS(left)
+        + DFS(right)
+```
+### Why It Works
+
+Each land cell is visited exactly once.
+
+When a cell is visited:
+
+```python
+grid[i][j] = 0
+```
+it cannot be counted again.
+Thus every island's area is computed correctly without needing a separate visited set.
+
+## Complexity
+- **Time Complexity:** O(m × n)
+- **Space Complexity:** O(m × n)
+
+Where:
+- `m` = number of rows
+- `n` = number of columns
+
+The recursion stack can contain all cells of a large island in the worst case.
+
+## Code
+```python
+class Solution(object):
+    def maxAreaOfIsland(self, grid):
+
+        def dfs(i, j):
+            if ( i >= len(grid) or i < 0 or j >= len(grid[0]) or j < 0 or grid[i][j] == 0):
+                return 0
+
+            grid[i][j] = 0
+
+            return (1 + dfs(i + 1, j) + dfs(i - 1, j) + dfs(i, j + 1) + dfs(i, j - 1))
+
+        output = 0
+        for i in range(len(grid)):
+            for j in range(len(grid[0])):
+                output = max(output, dfs(i, j))
+
+        return output
+```
