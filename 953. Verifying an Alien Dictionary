@@ -1,0 +1,75 @@
+# Verifying an Alien Dictionary
+
+## Difficulty
+Easy
+
+## Approach
+Create a mapping from each alien character to its position in the alien alphabet, then compare every adjacent pair of words.
+
+### Key Idea
+
+For two consecutive words:
+
+```text
+word1
+word2
+```
+
+Find the first position where the characters differ.
+
+- If the character in `word1` comes after the character in `word2` in the alien alphabet, the dictionary is not sorted.
+- Otherwise, the pair is valid.
+
+A special case occurs when one word is a prefix of another:
+
+```text
+"apple"
+"app"
+```
+
+Since the longer word appears before its prefix, the dictionary is not sorted.
+
+### Algorithm
+
+1. Build a hash map:
+
+```text
+character -> position in alien alphabet
+```
+
+2. Compare each adjacent pair of words.
+3. For the first differing character:
+   - Check their order using the hash map.
+4. If one word ends while all previous characters match:
+   - The shorter word must come first.
+5. If all pairs are valid, return `True`.
+
+## Complexity
+- **Time Complexity:** O(N)
+- **Space Complexity:** O(1)
+
+Where:
+- `N` is the total number of characters across all words.
+
+Each character is examined at most once during comparisons.
+
+## Code
+```python
+class Solution(object):
+    def isAlienSorted(self, words, order):
+        orderInd = { c:i for i, c in enumerate(order) }
+
+        for i in range(len(words) - 1):
+            w1, w2 = words[i], words[i + 1]
+
+            for j in range(len(w1)):
+                if j == len(w2):
+                    return False
+
+                if w1[j] != w2[j]:
+                    if orderInd[w1[j]] > orderInd[w2[j]]:
+                        return False
+                    break
+
+        return True
+```
