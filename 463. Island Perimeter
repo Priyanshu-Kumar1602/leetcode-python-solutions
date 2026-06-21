@@ -1,7 +1,7 @@
 # Island Perimeter
 
 ## Difficulty
-Easy
+Easy 
 
 ## Approach
 Use DFS to traverse the island and count how many edges contribute to the perimeter.
