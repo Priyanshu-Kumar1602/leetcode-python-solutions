@@ -1,0 +1,88 @@
+# IPO
+
+## Difficulty
+Hard
+
+## Approach
+Use two heaps to greedily choose the most profitable project that can currently be afforded.
+
+### Key Idea
+
+At any point:
+
+- We can only start projects whose required capital is less than or equal to our current capital `w`.
+- Among all available projects, choosing the one with the highest profit is always optimal.
+
+### Data Structures
+
+#### Min Heap
+
+Stores:
+
+```text
+[capitalRequired, profit]
+```
+
+This heap helps us quickly find all projects that become available as our capital grows.
+
+#### Max Heap
+
+Stores:
+
+```text
+-profit
+```
+
+This heap allows us to always select the available project with the maximum profit.
+
+### Algorithm
+
+1. Insert all projects into a min heap sorted by required capital.
+2. Repeat at most `k` times:
+   - Move all affordable projects into the max heap.
+   - If no project is affordable, stop.
+   - Choose the project with the highest profit.
+   - Add its profit to current capital.
+3. Return the final capital.
+
+## Complexity
+- **Time Complexity:** O(n log n + k log n)
+- **Space Complexity:** O(n)
+
+Where:
+- `n` is the number of projects.
+
+Operations:
+
+- Building the capital heap → O(n)
+- Each project enters and leaves a heap at most once → O(n log n)
+- Up to `k` project selections → O(k log n)
+
+Overall:
+
+```text
+O(n log n + k log n)
+```
+
+## Code
+```python
+import heapq
+
+class Solution(object):
+    def findMaximizedCapital(self, k, w, profits, capital):
+        maxProfit = []
+        minCapital = [(c, p) for c, p in zip(capital, profits)]
+        heapq.heapify(minCapital)
+
+        for i in range(k):
+            while (minCapital and minCapital[0][0] <= w):
+                c, p = heapq.heappop(minCapital)
+                heapq.heappush(maxProfit, -p)
+
+            if not maxProfit:
+                break
+
+            w += -heapq.heappop(maxProfit)
+
+        return w
+```
