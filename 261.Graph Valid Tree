@@ -1,0 +1,67 @@
+# Graph Valid Tree
+
+## Difficulty
+Medium
+
+## Approach
+Use DFS to verify the two properties of a valid tree:
+
+1. The graph contains **no cycles**.
+2. The graph is **fully connected**.
+
+### Key Idea
+
+Build an adjacency list for the undirected graph.
+
+During DFS:
+
+- Track visited nodes using a set.
+- Pass the parent node (`prev`) to avoid treating the edge we came from as a cycle.
+- If we revisit a node, a cycle exists.
+
+After DFS:
+
+- If a cycle was found, return `False`.
+- If not all nodes were visited, the graph is disconnected, so return `False`.
+- Otherwise, the graph is a valid tree.
+
+## Complexity
+
+- **Time Complexity:** O(V + E)
+- **Space Complexity:** O(V + E)
+
+Where:
+- `V` = number of nodes
+- `E` = number of edges
+
+Each node and edge is processed at most once.
+
+## Code
+
+```python
+class Solution:
+    def validTree(self, n: int, edges: List[List[int]]) -> bool:
+        adj = {i: [] for i in range(n)}
+
+        for n1, n2 in edges:
+            adj[n1].append(n2)
+            adj[n2].append(n1)
+
+        visit = set()
+
+        def dfs(i, prev):
+            if i in visit:
+                return False
+
+            visit.add(i)
+
+            for nei in adj[i]:
+                if nei == prev:
+                    continue
+
+                if not dfs(nei, i):
+                    return False
+            return True
+
+        return dfs(0, -1) and n == len(visit)
+```
