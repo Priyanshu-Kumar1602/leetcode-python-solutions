@@ -1,0 +1,83 @@
+# Open the Lock
+
+## Difficulty
+Medium
+
+## Approach
+Use Breadth-First Search (BFS) to find the minimum number of turns required to reach the target combination.
+
+### Key Idea
+
+Each lock combination represents a node in a graph.
+
+From any lock state, there are 8 possible next states:
+
+- Rotate one wheel forward.
+- Rotate one wheel backward.
+
+Since every move has equal cost, BFS guarantees that the first time we reach the target is with the minimum number of turns.
+
+### Algorithm
+
+1. If `"0000"` is a deadend, return `-1`.
+2. Start BFS from `"0000"`.
+3. Maintain a visited set initialized with all deadends.
+4. For each lock state:
+   - Generate its 8 neighboring states.
+   - Visit unvisited states and add them to the queue.
+5. If the target is reached, return the number of turns.
+6. If BFS finishes without reaching the target, return `-1`.
+
+## Complexity
+
+- **Time Complexity:** O(10⁴)
+- **Space Complexity:** O(10⁴)
+
+There are at most:
+
+```text
+10 × 10 × 10 × 10 = 10,000
+```
+
+possible lock combinations.
+
+Each state generates 8 neighbors, which is a constant amount of work.
+
+## Code
+
+```python
+from collections import deque
+
+class Solution(object):
+    def openLock(self, deadends, target):
+        if "0000" in deadends:
+            return -1
+
+        def children(lock):
+            output = []
+
+            for i in range(4):
+                digit = str((int(lock[i]) + 1) % 10)
+                output.append(lock[:i] + digit + lock[i + 1:])
+                digit = str((int(lock[i]) - 1 + 10) % 10)
+                output.append(lock[:i] + digit + lock[i + 1:])
+
+            return output
+
+        q = deque()
+        q.append(["0000", 0])
+
+        visit = set(deadends)
+
+        while q:
+            lock, turns = q.popleft()
+            if lock == target:
+                return turns
+
+            for child in children(lock):
+                if child not in visit:
+                    visit.add(child)
+                    q.append([child, turns + 1])
+
+        return -1
+```
