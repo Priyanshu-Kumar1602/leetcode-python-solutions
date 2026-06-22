@@ -1,0 +1,84 @@
+# Pacific Atlantic Water Flow
+
+## Difficulty
+Medium
+
+## Approach
+Use DFS from the ocean boundaries instead of starting from every cell.
+
+### Key Idea
+
+A cell can flow into an ocean if water can travel from that cell to the ocean through cells of equal or lower height.
+
+Instead of checking every cell independently:
+
+- Start DFS from all Pacific border cells.
+- Start DFS from all Atlantic border cells.
+- During DFS, only move to cells with height greater than or equal to the current cell.
+
+This reverse traversal finds all cells that can reach each ocean.
+
+Finally, the answer consists of cells reachable from both oceans.
+
+### Algorithm
+
+1. Create two visited sets:
+   - `pac` for Pacific-reachable cells.
+   - `atl` for Atlantic-reachable cells.
+2. Run DFS from:
+   - Top row and left column (Pacific).
+   - Bottom row and right column (Atlantic).
+3. During DFS:
+   - Ignore out-of-bounds cells.
+   - Ignore already visited cells.
+   - Only move to neighboring cells whose height is at least the current height.
+4. Collect cells that belong to both visited sets.
+
+## Complexity
+
+- **Time Complexity:** O(m × n)
+- **Space Complexity:** O(m × n)
+
+Where:
+- `m` = number of rows
+- `n` = number of columns
+
+Each cell is visited at most once for Pacific and once for Atlantic.
+
+## Code
+
+```python
+class Solution(object):
+    def pacificAtlantic(self, heights):
+        rows, cols = len(heights), len(heights[0])
+
+        pac, atl = set(), set()
+
+        def dfs(r, c, visit, prevHeight):
+            if (r < 0 or c < 0 or r >= rows or c >= cols or (r, c) in visit or heights[r][c] < prevHeight):
+                return
+
+            visit.add((r, c))
+
+            dfs(r + 1, c, visit, heights[r][c])
+            dfs(r - 1, c, visit, heights[r][c])
+            dfs(r, c + 1, visit, heights[r][c])
+            dfs(r, c - 1, visit, heights[r][c])
+
+        for c in range(cols):
+            dfs(0, c, pac, heights[0][c])
+            dfs(rows - 1, c, atl, heights[rows - 1][c])
+
+        for r in range(rows):
+            dfs(r, 0, pac, heights[r][0])
+            dfs(r, cols - 1, atl, heights[r][cols - 1])
+
+        output = []
+
+        for r in range(rows):
+            for c in range(cols):
+                if (r, c) in pac and (r, c) in atl:
+                    output.append([r, c])
+
+        return output
+```
