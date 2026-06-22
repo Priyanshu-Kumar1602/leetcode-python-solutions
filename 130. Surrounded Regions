@@ -1,0 +1,72 @@
+# Surrounded Regions
+
+## Difficulty
+Medium
+
+## Approach
+Use DFS to mark all `'O'` cells connected to the border.
+
+### Key Idea
+
+Any `'O'` region connected to the border cannot be surrounded.
+
+Instead of finding surrounded regions directly:
+
+1. Start DFS from all border `'O'` cells.
+2. Mark every reachable `'O'` as temporary (`'T'`).
+3. Convert all remaining `'O'` cells to `'X'` since they are surrounded.
+4. Convert all temporary `'T'` cells back to `'O'`.
+
+### Algorithm
+
+1. Traverse all border cells.
+2. For each border `'O'`, run DFS and mark connected cells as `'T'`.
+3. Traverse the board:
+   - `'O'` → `'X'`
+4. Traverse again:
+   - `'T'` → `'O'`
+
+## Complexity
+
+- **Time Complexity:** O(m × n)
+- **Space Complexity:** O(m × n)
+
+Where:
+- `m` = number of rows
+- `n` = number of columns
+
+Each cell is visited at most once during DFS.
+
+## Code
+
+```python
+class Solution(object):
+    def solve(self, board):
+        rows, cols = len(board), len(board[0])
+
+        def capture(i, j):
+            if (i < 0 or i >= rows or j < 0 or j >= cols or board[i][j] != "O"):
+                return
+
+            board[i][j] = "T"
+
+            capture(i + 1, j)
+            capture(i - 1, j)
+            capture(i, j + 1)
+            capture(i, j - 1)
+
+        for i in range(rows):
+            for j in range(cols):
+                if (board[i][j] == "O" and (i in [0, rows - 1] or j in [0, cols - 1]) ):
+                    capture(i, j)
+
+        for r in range(rows):
+            for c in range(cols):
+                if board[r][c] == "O":
+                    board[r][c] = "X"
+
+        for r in range(rows):
+            for c in range(cols):
+                if board[r][c] == "T":
+                    board[r][c] = "O"
+```
