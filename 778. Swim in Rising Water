@@ -1,0 +1,66 @@
+# Swim in Rising Water
+
+## Difficulty
+Hard
+
+## Approach
+Use Dijkstra's Algorithm where the cost of a path is the maximum elevation encountered so far.
+
+### Key Idea
+
+At time `t`, you can enter a cell only if:
+
+```text
+grid[r][c] <= t
+```
+
+Therefore, the cost of a path is:
+
+```text
+maximum elevation on that path
+```
+
+For each move:
+
+```python
+newTime = max(currentTime, grid[newR][newC])
+```
+
+The first time we reach the bottom-right cell, we have found the minimum possible time.
+
+## Complexity
+
+- **Time Complexity:** O(n² log n)
+- **Space Complexity:** O(n²)
+
+Where:
+- `n` = grid dimension
+
+## Code
+
+```python
+class Solution(object):
+    def swimInWater(self, grid):
+        rows, cols = len(grid), len(grid[0])
+        minHeap = [[grid[0][0], 0, 0]] # [time,r,c]
+        visit = set()
+        directions = [[1, 0],[-1, 0],[0, 1],[0, -1]]
+
+        while minHeap:
+            time, r, c = heapq.heappop(minHeap)
+
+            if (r, c) in visit:
+                continue
+            visit.add((r, c))
+
+            if (r, c) == (rows - 1, cols - 1):
+                return time
+
+            for dr, dc in directions:
+                newR, newC = r + dr, c + dc
+                if (newR < 0 or newC < 0 or newR >= rows or newC >= cols or (newR, newC) in visit):
+                    continue
+
+                newTime = max(diff, grid[newR][newC])
+                heapq.heappush(minHeap,[newDiff, newR, newC])
+```
