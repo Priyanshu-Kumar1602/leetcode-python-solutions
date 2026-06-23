@@ -1,0 +1,76 @@
+# Course Schedule IV
+
+## Difficulty
+Medium
+
+## Approach
+Use DFS with memoization to precompute all prerequisites for every course.
+
+### Key Idea
+
+For each course, compute the set of all courses that are prerequisites (directly or indirectly).
+
+Let:
+
+```text
+prereqMap[course]
+```
+
+store all prerequisites of that course.
+
+Using DFS:
+
+- Recursively gather prerequisites of each prerequisite.
+- Union those sets together.
+- Cache the result to avoid repeated work.
+
+After preprocessing, each query can be answered in constant time.
+
+## Complexity
+
+- **Time Complexity:** O(V × (V + E))
+- **Space Complexity:** O(V²)
+
+Where:
+- `V` = number of courses
+- `E` = number of prerequisite relations
+
+In the worst case, every course can be a prerequisite of every other course, causing each prerequisite set to grow to size `O(V)`.
+
+Query processing is:
+
+```text
+O(1)
+```
+
+per query.
+
+## Code
+
+```python
+class Solution(object):
+    def checkIfPrerequisite(self,numCourses,prerequisites,queries):
+        adj = {i: [] for i in range(numCourses)}
+
+        for prereq, crs in prerequisites:
+            adj[crs].append(prereq)
+
+        prereqMap = {}
+
+        def dfs(crs):
+            if crs not in prereqMap:
+                prereqMap[crs] = set()
+
+                for prereq in adj[crs]:
+                    prereqMap[crs] |= dfs(prereq)
+                prereqMap[crs].add(crs)
+            return prereqMap[crs]
+
+        for crs in range(numCourses):
+            dfs(crs)
+
+        output = []
+        for u, v in queries:
+            output.append(u in prereqMap[v])
+        return output
+```
