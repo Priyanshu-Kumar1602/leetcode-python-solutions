@@ -1,0 +1,64 @@
+# Cheapest Flights Within K Stops
+
+## Difficulty
+Medium
+
+## Approach
+Use a modified Bellman-Ford algorithm.
+
+### Key Idea
+
+A path with at most `k` stops contains at most:
+
+```text
+k + 1 edges
+```
+
+Bellman-Ford relaxes all edges repeatedly.
+
+After the `i`-th iteration:
+
+```text
+Shortest paths using at most i edges are known.
+```
+To prevent updates within the same iteration from affecting other relaxations, use a temporary copy of the distance array.
+
+### Algorithm
+
+1. Initialize all prices as infinity.
+2. Set the source price to `0`.
+3. Perform `k + 1` rounds of edge relaxation.
+4. In each round:
+   - Copy the current prices.
+   - Relax every flight using the previous iteration's prices.
+5. Return the destination price if reachable.
+
+## Complexity
+
+- **Time Complexity:** O((k + 1) × E)
+- **Space Complexity:** O(V)
+
+Where:
+- `V` = number of cities
+- `E` = number of flights
+
+## Code
+
+```python
+class Solution(object):
+    def findCheapestPrice(self,n,flights,src,dst,k):
+        prices = [float("inf")] * n
+        prices[src] = 0
+
+        for i in range(k + 1):
+            tempPrices = prices[:]
+
+            for s, d, p in flights:
+                if prices[s] == float("inf"):
+                    continue
+                if prices[s] + p < tempPrices[d]:
+                    tempPrices[d] = prices[s] + p
+            prices = tempPrices
+
+        return -1 if prices[dst] == float("inf") else prices[dst]
+```
