@@ -1,0 +1,83 @@
+# Min Cost to Connect All Points
+
+## Difficulty
+Medium
+
+## Approach
+Use Prim's Algorithm to build a Minimum Spanning Tree (MST).
+
+### Key Idea
+
+Treat each point as a node in a graph.
+
+The weight between two points is their Manhattan distance:
+
+```text
+|x₁ - x₂| + |y₁ - y₂|
+```
+
+Prim's algorithm grows the MST one node at a time:
+
+1. Start from any point.
+2. Always choose the minimum-cost edge connecting a visited node to an unvisited node.
+3. Add the new node to the MST.
+4. Continue until all points have been visited.
+
+The sum of all selected edge weights is the minimum cost required to connect every point.
+
+## Complexity
+
+### Current Solution
+
+- **Time Complexity:** O(n² log n)
+- **Space Complexity:** O(n²)
+
+Where:
+- `n` = number of points
+
+Building the complete graph requires:
+
+```text
+O(n²)
+```
+
+edges, and Prim's algorithm processes them using a min-heap.
+
+## Code
+
+```python
+class Solution(object):
+    def minCostConnectPoints(self, points):
+        n = len(points)
+
+        adj = {i: [] for i in range(n)}
+
+        for i in range(n):
+            x1, y1 = points[i]
+
+            for j in range(i + 1, n):
+                x2, y2 = points[j]
+
+                dist = abs(x1 - x2) + abs(y1 - y2)
+
+                adj[i].append([dist, j])
+                adj[j].append([dist, i])
+
+        output = 0
+        minHeap = [[0, 0]]
+        visit = set()
+
+        while len(visit) < n:
+            cost, n1 = heapq.heappop(minHeap)
+
+            if n1 in visit:
+                continue
+
+            visit.add(n1)
+            output += cost
+
+            for neiCost, nei in adj[n1]:
+                if nei not in visit:
+                    heapq.heappush(minHeap,[neiCost, nei])
+        return output
+```
