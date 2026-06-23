@@ -1,0 +1,89 @@
+# Path With Minimum Effort
+
+## Difficulty
+Medium
+
+## Approach
+Use Dijkstra's Algorithm where the path cost is the maximum height difference encountered along the path.
+
+### Key Idea
+
+Unlike a standard shortest path problem:
+
+```text
+Path Cost = Sum of Edge Weights
+```
+
+here the cost of a path is:
+
+```text
+Path Cost = Maximum Edge Weight Along the Path
+```
+
+For each move:
+
+```python
+newDiff = max(currentEffort,abs(height1 - height2))
+```
+
+The first time the destination cell is removed from the min-heap, we have found the minimum possible effort.
+
+### Algorithm
+
+1. Start from `(0, 0)` with effort `0`.
+2. Use a min-heap storing:
+
+```text
+[effort, row, col]
+```
+
+3. Repeatedly process the cell with the smallest effort.
+4. For each neighbor:
+   - Compute the effort required to reach it.
+   - Push it into the heap.
+5. When the destination is popped from the heap, return its effort.
+
+## Complexity
+
+- **Time Complexity:** O(m × n × log(m × n))
+- **Space Complexity:** O(m × n)
+
+Where:
+- `m` = number of rows
+- `n` = number of columns
+
+Each cell may be inserted into the heap, and heap operations cost `log(m × n)`.
+
+## Code
+
+```python
+import heapq
+
+class Solution(object):
+    def minimumEffortPath(self, heights):
+        rows, cols = len(heights), len(heights[0])
+
+        minHeap = [[0, 0, 0]]  # [effort, row, col]
+        visit = set()
+
+        directions = [[1, 0],[-1, 0],[0, 1],[0, -1]]
+
+        while minHeap:
+            diff, r, c = heapq.heappop(minHeap)
+            if (r, c) in visit:
+                continue
+            visit.add((r, c))
+
+            if (r, c) == (rows - 1, cols - 1):
+                return diff
+
+            for dr, dc in directions:
+                newR, newC = r + dr, c + dc
+
+                if (newR < 0 or newC < 0 or newR >= rows or newC >= cols or (newR, newC) in visit):
+                    continue
+
+                newDiff = max(diff,abs(heights[r][c]- heights[newR][newC]))
+
+                heapq.heappush(minHeap,[newDiff, newR, newC])
+```
