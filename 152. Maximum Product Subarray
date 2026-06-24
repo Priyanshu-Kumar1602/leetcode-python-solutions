@@ -1,0 +1,75 @@
+# Maximum Product Subarray
+
+## Difficulty
+Medium
+
+## Approach
+Use Dynamic Programming while tracking both the maximum and minimum product ending at the current position.
+
+### Key Insight
+Unlike the Maximum Sum Subarray problem, a negative number can turn:
+
+- A large positive product into a large negative product.
+- A large negative product into a large positive product.
+
+Therefore, for each position, maintain:
+
+- `currMax` = maximum product ending at the current index.
+- `currMin` = minimum product ending at the current index.
+
+Both values are needed because multiplying by a negative number can swap their roles.
+
+### Transition
+
+For each number `n`:
+
+```text
+currMax = max(n,n * currMax,n * currMin)
+```
+
+```text
+currMin = min(n,n * currMax(previous),n * currMin)
+```
+
+The answer is the maximum value of `currMax` encountered during the traversal.
+
+### Handling Zero
+
+When a zero is encountered:
+
+```text
+currMax = 1
+currMin = 1
+```
+
+because any subarray product crossing a zero becomes zero, and a new subarray must start afterward.
+
+## Complexity
+
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(1)
+
+Only a constant number of variables are maintained.
+
+## Code
+
+```python
+class Solution(object):
+    def maxProduct(self, nums):
+        output = max(nums)
+
+        currMax = 1
+        currMin = 1
+
+        for n in nums:
+            if n == 0:
+                currMax, currMin = 1, 1
+                continue
+
+            temp = currMax
+            currMax = max(n * currMax,n * currMin,n)
+            currMin = min(n * temp,n * currMin,n)
+            output = max(output, currMax)
+
+        return output
+```
