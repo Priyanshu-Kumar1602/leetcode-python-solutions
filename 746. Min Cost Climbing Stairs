@@ -1,0 +1,57 @@
+# Min Cost Climbing Stairs
+
+## Difficulty
+Easy
+
+## Approach
+Use Dynamic Programming from the top of the staircase back to the beginning.
+
+### Key Idea
+
+Let:
+
+```text
+cost[i]
+```
+
+represent the minimum cost required to reach the top starting from step `i`.
+
+From any step, you can move:
+
+- 1 step ahead
+- 2 steps ahead
+
+Therefore:
+
+```text
+cost[i] = cost[i] + min(cost[i+1], cost[i+2])
+```
+
+Append a `0` to represent the top of the staircase and compute the minimum costs backwards.
+
+The answer is:
+
+```text
+min(cost[0], cost[1])
+```
+
+because you may start from either step `0` or step `1`.
+
+## Complexity
+
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(1)
+
+The input array is reused as the DP array.
+
+## Code
+
+```python
+class Solution(object):
+    def minCostClimbingStairs(self, cost):
+        cost.append(0)
+
+        for i in range(len(cost) - 3, -1, -1):
+            cost[i] = cost[i] + min(cost[i + 1],cost[i + 2])
+        return min(cost[0], cost[1])
+```
