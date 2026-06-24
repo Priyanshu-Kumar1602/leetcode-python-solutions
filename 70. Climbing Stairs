@@ -1,0 +1,49 @@
+# Climbing Stairs
+
+## Difficulty
+Easy
+
+## Approach
+Use Dynamic Programming with two variables.
+
+### Key Idea
+
+To reach step `i`, you can come from:
+
+- Step `i - 1`
+- Step `i - 2`
+
+Therefore:
+
+```text
+dp[i] = dp[i - 1] + dp[i - 2]
+```
+
+This is the Fibonacci recurrence.
+
+Instead of storing the entire DP array, keep only the previous two values:
+
+- `one` = ways to reach the current step
+- `two` = ways to reach the previous step
+
+Update them iteratively until reaching step `n`.
+
+## Complexity
+
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(1)
+
+## Code
+
+```python
+class Solution(object):
+    def climbStairs(self, n):
+        one, two = 1, 1
+
+        for i in range(n - 1):
+            temp = one
+            one = one + two
+            two = temp
+
+        return one
+```
