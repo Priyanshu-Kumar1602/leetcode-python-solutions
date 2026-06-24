@@ -1,0 +1,47 @@
+# House Robber
+
+## Difficulty
+Medium
+
+## Approach
+Use Dynamic Programming with constant space.
+
+### Key Idea
+
+For each house, you have two choices:
+
+1. Rob the current house and add its money to the best profit from two houses back.
+2. Skip the current house and keep the best profit so far.
+
+At every step:
+
+```text
+current = max(current_house + profit_two_houses_back,profit_previous_house)
+```
+
+Maintain only two variables:
+
+- `rob1` = maximum profit up to house `i-2`
+- `rob2` = maximum profit up to house `i-1`
+
+This eliminates the need for a DP array.
+
+## Complexity
+
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(1)
+
+## Code
+
+```python
+class Solution(object):
+    def rob(self, nums):
+        rob1, rob2 = 0, 0
+
+        for n in nums:
+            temp = max(n + rob1, rob2)
+            rob1 = rob2
+            rob2 = temp
+
+        return rob2
+```
