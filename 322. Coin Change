@@ -1,0 +1,64 @@
+# Coin Change
+
+## Difficulty
+Medium
+
+## Approach
+
+Use **Dynamic Programming** to compute the minimum number of coins required for every amount from `0` to `amount`.
+
+Let:
+```text
+dp[a]
+```
+represent the minimum number of coins needed to form amount `a`.
+
+### Initialization
+
+- `dp[0] = 0` because no coins are needed to form amount `0`.
+- Initialize all other values to `amount + 1`, which acts as an impossible value.
+
+### Transition
+For every amount `a` and every coin `c`:
+
+```text
+dp[a] = min(dp[a],1 + dp[a - c])
+```
+
+if:
+
+```text
+a - c >= 0
+```
+
+This considers using coin `c` as the last coin in the solution.
+
+### Result
+
+- If `dp[amount]` remains `amount + 1`, the amount cannot be formed, so return `-1`.
+- Otherwise, return `dp[amount]`.
+
+## Complexity
+
+- **Time Complexity:** O(amount × n)
+- **Space Complexity:** O(amount)
+
+Where:
+
+- `amount` is the target amount.
+- `n` is the number of coin denominations.
+
+## Code
+
+```python
+class Solution:
+    def coinChange(self, coins: List[int], amount: int) -> int:
+        dp = [amount + 1] * (amount + 1)
+        dp[0] = 0
+
+        for a in range(1, amount + 1):
+            for c in coins:
+                if a - c >= 0:
+                    dp[a] = min(dp[a],1 + dp[a - c])
+        return (dp[amount] if dp[amount] != amount + 1 else -1)
+```
