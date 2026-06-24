@@ -1,0 +1,58 @@
+# Longest Palindromic Substring
+
+## Difficulty
+Medium
+
+## Approach
+
+Use the **Expand Around Center** technique.
+
+A palindrome mirrors itself around its center. Every palindrome can be categorized as one of two types:
+
+1. **Odd-length palindrome** — centered at a character.
+2. **Even-length palindrome** — centered between two characters.
+
+For each index:
+
+- Expand outward considering the index as the center of an odd-length palindrome.
+- Expand outward considering the gap between the current index and the next index as the center of an even-length palindrome.
+- Update the longest palindrome found during the expansions.
+
+## Complexity
+
+- **Time Complexity:** O(n²)
+- **Space Complexity:** O(1)
+
+In the worst case (e.g., `"aaaaa"`), each expansion may scan most of the string.
+
+## Code
+
+```python
+class Solution(object):
+    def longestPalindrome(self, s):
+        output = ""
+        output_len = 0
+
+        for i in range(len(s)):
+            l, r = i, i
+
+            while l >= 0 and r < len(s) and s[l] == s[r]:
+                if (r - l + 1) > output_len:
+                    output = s[l:r + 1]
+                    output_len = r - l + 1
+
+                l -= 1
+                r += 1
+
+            l, r = i, i + 1
+
+            while l >= 0 and r < len(s) and s[l] == s[r]:
+                if (r - l + 1) > output_len:
+                    output = s[l:r + 1]
+                    output_len = r - l + 1
+
+                l -= 1
+                r += 1
+
+        return output
+```
