@@ -1,0 +1,58 @@
+# House Robber II
+
+## Difficulty
+Medium
+
+## Approach
+
+Since the houses are arranged in a circle, the first and last houses are adjacent and cannot both be robbed.
+
+To handle this constraint, divide the problem into two independent linear House Robber problems:
+
+1. Rob houses in the range `[0, n - 2]`
+2. Rob houses in the range `[1, n - 1]`
+
+The maximum profit obtained from these two cases is the answer.
+
+### Edge Case
+
+If the input contains only one house, the maximum profit is simply the value of that house.
+
+### Dynamic Programming
+
+For a linear sequence of houses, let:
+
+- `rob1` represent the maximum profit up to two houses before the current house.
+- `rob2` represent the maximum profit up to the previous house.
+
+For each house:
+
+```text
+current = max(current_house + rob1,rob2)
+```
+
+Update the variables iteratively until the end of the range.
+
+## Complexity
+
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(1)
+
+The algorithm processes each house a constant number of times while using only a fixed amount of additional memory.
+
+## Code
+
+```python
+class Solution(object):
+    def rob(self, nums):
+        def helper(l, r):
+            rob1, rob2 = 0, 0
+
+            for i in range(l, r + 1):
+                temp = max(nums[i] + rob1, rob2)
+                rob1 = rob2
+                rob2 = temp
+            return rob2
+
+        return max(nums[0],helper(1, len(nums) - 1),helper(0, len(nums) - 2))
+```
