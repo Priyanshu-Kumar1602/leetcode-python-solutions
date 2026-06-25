@@ -1,0 +1,48 @@
+# Unique Paths
+
+## Difficulty
+Medium
+
+## Approach
+
+A robot can only move:
+
+- Right
+- Down
+
+Let `dp[r][c]` represent the number of ways to reach the destination from cell `(r, c)`.
+
+For any cell:
+
+```text
+dp[r][c] = dp[r + 1][c] + dp[r][c + 1]
+```
+
+since the robot can move either down or right.
+
+Instead of storing the entire `m × n` DP table, observe that each row depends only on the row below it.
+
+Maintain a single row representing the DP values of the row below and build the current row from right to left.
+
+The answer will be stored at the top-left cell after processing all rows.
+
+## Complexity
+
+- **Time Complexity:** O(m × n)
+- **Space Complexity:** O(n)
+
+## Code
+
+```python
+class Solution(object):
+    def uniquePaths(self, m, n):
+        row = [1] * n
+
+        for i in range(m - 2, -1, -1):
+            newRow = [1] * n
+            for j in range(n - 2, -1, -1):
+                newRow[j] = newRow[j + 1] + row[j]
+
+            row = newRow
+        return row[0]
+```
