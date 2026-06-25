@@ -1,0 +1,87 @@
+# Minimum Path Sum
+
+## Difficulty
+Medium
+
+## Approach
+
+Use **Depth-First Search (DFS)** with memoization.
+
+Starting from the top-left cell, recursively compute the minimum path sum needed to reach the bottom-right cell.
+
+Let:
+
+```text
+dfs(r, c)
+```
+
+represent the minimum path sum from cell `(r, c)` to the destination.
+
+### Base Cases
+
+- If the cell is outside the grid, return:
+
+```text
+∞
+```
+
+so that invalid paths are never chosen.
+
+- If the destination cell is reached, return its value.
+
+### Memoization
+
+Store previously computed results in:
+
+```text
+dp[(r, c)]
+```
+
+to avoid recalculating the same subproblems.
+
+### Transition
+
+From any cell, the robot can move:
+
+- Down
+- Right
+
+Therefore:
+
+```text
+dfs(r, c) = grid[r][c] + min(dfs(r + 1, c),dfs(r, c + 1))
+```
+
+The answer is the minimum path sum starting from `(0, 0)`.
+
+## Complexity
+
+- **Time Complexity:** O(m × n)
+- **Space Complexity:** O(m × n)
+
+Where:
+
+- `m` = number of rows
+- `n` = number of columns
+
+Each cell is computed at most once.
+
+## Code
+
+```python
+class Solution(object):
+    def minPathSum(self, grid):
+        m, n = len(grid), len(grid[0])
+        dp = {(m - 1, n - 1): grid[m - 1][n - 1]}
+
+        def dfs(r, c):
+            if r >= m or c >= n:
+                return float("inf")
+            if (r, c) in dp:
+                return dp[(r, c)]
+
+            dp[(r, c)] = grid[r][c] + min(dfs(r + 1, c),dfs(r, c + 1))
+            return dp[(r, c)]
+
+        return dfs(0, 0)
+```
