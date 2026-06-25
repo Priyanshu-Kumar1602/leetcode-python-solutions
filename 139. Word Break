@@ -1,0 +1,99 @@
+# Word Break
+
+## Difficulty
+Medium
+
+## Approach
+
+Use Dynamic Programming to determine whether the string can be segmented into valid dictionary words.
+
+Let:
+
+```text
+dp[i]
+```
+
+represent whether the substring:
+
+```text
+s[i:]
+```
+
+can be segmented using words from the dictionary.
+
+### Initialization
+
+The empty string can always be segmented:
+
+```text
+dp[len(s)] = True
+```
+
+### Transition
+
+For each index `i` from right to left:
+
+- Try every word in `wordDict`.
+- If the word matches the substring starting at `i`:
+
+```text
+s[i:i+len(word)] == word
+```
+
+and the remaining suffix can be segmented:
+
+```text
+dp[i + len(word)] == True
+```
+
+then:
+
+```text
+dp[i] = True
+```
+
+and no further checks are needed for that index.
+
+### Result
+
+The answer is:
+
+```text
+dp[0]
+```
+
+which indicates whether the entire string can be segmented.
+
+## Complexity
+
+Let:
+
+- `n` = length of `s`
+- `m` = number of words in `wordDict`
+- `L` is the average word length, due to substring comparisons.
+
+### Time Complexity
+
+O(n × m × L)
+
+### Space Complexity
+
+O(n)
+
+## Code
+
+```python
+class Solution(object):
+    def wordBreak(self, s, wordDict):
+        dp = [False] * (len(s) + 1)
+        dp[len(s)] = True
+
+        for i in range(len(s) - 1, -1, -1):
+            for w in wordDict:
+                if (i + len(w) <= len(s) and s[i:i + len(w)] == w):
+                    dp[i] = dp[i + len(w)]
+                if dp[i]:
+                    break
+
+        return dp[0]
+```
