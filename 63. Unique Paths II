@@ -1,0 +1,83 @@
+# Unique Paths II
+
+## Difficulty
+Medium
+
+## Approach
+
+Use **Depth-First Search (DFS)** with memoization.
+
+Starting from the top-left cell, recursively compute the number of paths to the destination.
+
+Let:
+
+```text
+dfs(r, c)
+```
+
+represent the number of unique paths from cell `(r, c)` to the bottom-right cell.
+
+### Base Cases
+
+- If the cell is outside the grid, return `0`.
+- If the cell contains an obstacle (`1`), return `0`.
+- If the destination cell is reached, return `1`.
+
+### Memoization
+
+Store previously computed results in a dictionary:
+
+```text
+dp[(r, c)]
+```
+
+to avoid recomputing the same subproblems.
+
+### Transition
+
+From any valid cell, the robot can move:
+
+- Down
+- Right
+
+Therefore:
+
+```text
+dfs(r, c) = dfs(r + 1, c) + dfs(r, c + 1)
+```
+
+The answer is the number of paths starting from `(0, 0)`.
+
+## Complexity
+
+- **Time Complexity:** O(m × n)
+- **Space Complexity:** O(m × n)
+
+Where:
+
+- `m` = number of rows
+- `n` = number of columns
+
+Each cell is computed at most once.
+
+## Code
+
+```python
+class Solution(object):
+    def uniquePathsWithObstacles(self, grid):
+        m = len(grid)
+        n = len(grid[0])
+        dp = {(m - 1, n - 1): 1}
+
+        def dfs(r, c):
+            if r >= m or c >= n or grid[r][c] == 1:
+                return 0
+            if (r, c) in dp:
+                return dp[(r, c)]
+
+            dp[(r, c)] = dfs(r + 1, c) + dfs(r, c + 1)
+            
+            return dp[(r, c)]
+
+        return dfs(0, 0)
+```
