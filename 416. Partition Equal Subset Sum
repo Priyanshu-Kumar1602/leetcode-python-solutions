@@ -1,0 +1,55 @@
+# Partition Equal Subset Sum
+
+## Difficulty
+Medium
+
+## Approach
+
+If the total sum of the array is odd, it is impossible to partition it into two subsets with equal sum.
+
+Let:
+
+```text
+target = sum(nums) / 2
+```
+
+The problem then becomes determining whether a subset exists whose sum equals `target`.
+
+Use a set to store all achievable subset sums.
+
+- Start with `0` as the only achievable sum.
+- For each number, generate new subset sums by adding the current number to every existing sum.
+- Merge the new sums with the existing set.
+- If `target` is reached at any point, return `True`.
+
+If all numbers are processed and `target` is never reached, return `False`.
+
+## Complexity
+
+- **Time Complexity:** O(n × target)
+- **Space Complexity:** O(target)
+
+## Code
+
+```python
+class Solution(object):
+    def canPartition(self, nums):
+        if sum(nums) % 2:
+            return False
+
+        dp = set()
+        dp.add(0)
+        target = sum(nums) // 2
+
+        for n in nums:
+            nextDp = set(dp)
+
+            for t in dp:
+                if t + n == target:
+                    return True
+                nextDp.add(t + n)
+
+            dp = nextDp
+
+        return False
+```
