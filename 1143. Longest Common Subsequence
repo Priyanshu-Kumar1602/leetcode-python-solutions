@@ -1,0 +1,87 @@
+# Longest Common Subsequence
+
+## Difficulty
+Medium
+
+## Approach
+
+Use Dynamic Programming to compute the length of the longest common subsequence between the two strings.
+
+Let:
+
+```text
+dp[i][j]
+```
+
+represent the length of the longest common subsequence between:
+
+```text
+text1[i:]
+```
+
+and
+
+```text
+text2[j:]
+```
+
+### Transition
+
+If the current characters match:
+
+```text
+text1[i] == text2[j]
+```
+
+then they can be included in the subsequence:
+
+```text
+dp[i][j] = 1 + dp[i + 1][j + 1]
+```
+
+Otherwise, skip one character from either string and take the better result:
+
+```text
+dp[i][j] = max(dp[i + 1][j],dp[i][j + 1])
+```
+
+### Initialization
+
+An extra row and column of zeros are added to handle the base case where one of the strings is exhausted.
+
+### Result
+
+The answer is stored in:
+
+```text
+dp[0][0]
+```
+
+which represents the longest common subsequence of the entire strings.
+
+## Complexity
+
+- **Time Complexity:** O(m × n)
+- **Space Complexity:** O(m × n)
+
+Where:
+
+- `m` = length of `text1`
+- `n` = length of `text2`
+
+## Code
+
+```python
+class Solution(object):
+    def longestCommonSubsequence(self, text1, text2):
+        dp = [[0 for j in range(len(text2) + 1)] for i in range(len(text1) + 1)]
+
+        for i in range(len(text1) - 1, -1, -1):
+            for j in range(len(text2) - 1, -1, -1):
+                if text1[i] == text2[j]:
+                    dp[i][j] = 1 + dp[i + 1][j + 1]
+                else:
+                    dp[i][j] = max(dp[i + 1][j],dp[i][j + 1])
+
+        return dp[0][0]
+```
