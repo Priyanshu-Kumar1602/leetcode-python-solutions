@@ -1,0 +1,96 @@
+# Stone Game III
+
+## Difficulty
+Hard
+
+## Approach
+
+Use Dynamic Programming with memoized DFS.
+
+Let:
+
+```text
+dfs(i)
+```
+
+represent the maximum score difference the current player can achieve over the opponent starting from index `i`.
+
+At each turn, a player can take:
+
+- 1 stone
+- 2 stones
+- 3 stones
+
+For each choice, calculate the total value of the stones taken and subtract the best score difference the opponent can achieve from the next position.
+
+The current player chooses the option that maximizes this score difference.
+
+### Transition
+
+For every valid choice:
+
+```text
+score = stones_taken - dfs(next_position)
+```
+
+Update:
+
+```text
+dfs(i) = max(score)
+```
+
+### Memoization
+
+Store the result of each index in a hash map to avoid recomputing the same state multiple times.
+
+### Result
+
+After computing:
+
+```text
+score = dfs(0)
+```
+
+- If `score > 0`, Alice wins.
+- If `score < 0`, Bob wins.
+- If `score == 0`, the game ends in a tie.
+
+## Complexity
+
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(n)
+
+Each index is computed at most once and stored in the memoization table.
+
+## Code
+
+```python
+class Solution(object):
+    def stoneGameIII(self, values):
+        dp = {}
+
+        def dfs(i):
+            if i == len(values):
+                return 0
+            if i in dp:
+                return dp[i]
+
+            output = float("-inf")
+            total = 0
+
+            for j in range(i, min(i + 3, len(values))):
+                total += values[j]
+                output = max(output,total - dfs(j + 1))
+
+            dp[i] = output
+            return dp[i]
+
+        score = dfs(0)
+
+        if score > 0:
+            return "Alice"
+        elif score < 0:
+            return "Bob"
+        else:
+            return "Tie"
+```
