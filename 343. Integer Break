@@ -1,0 +1,91 @@
+# Integer Break
+
+## Difficulty
+Medium
+
+## Approach
+
+Use Dynamic Programming to compute the maximum product obtainable for every integer from `1` to `n`.
+
+Let:
+
+```text
+dp[num]
+```
+
+represent the maximum product that can be obtained from `num`.
+
+### Initialization
+
+```text
+dp[1] = 1
+```
+
+For every value less than `n`, initialize:
+
+```text
+dp[num] = num
+```
+
+This allows future computations to choose between:
+
+- Keeping a number as it is.
+- Breaking it further into smaller parts.
+
+For `n` itself, initialize:
+
+```text
+dp[n] = 0
+```
+
+to ensure that the final answer uses at least one split.
+
+### Transition
+
+For each integer `num`, try every possible split:
+
+```text
+num = i + (num - i)
+```
+
+The product obtained from this split is:
+
+```text
+dp[i] × dp[num - i]
+```
+
+Update:
+
+```text
+dp[num] = max(dp[num],dp[i] × dp[num - i])
+```
+
+### Result
+
+The answer is stored in:
+
+```text
+dp[n]
+```
+
+which represents the maximum product obtainable after breaking `n` into at least two positive integers.
+
+## Complexity
+
+- **Time Complexity:** O(n²)
+- **Space Complexity:** O(n)
+
+## Code
+
+```python
+class Solution(object):
+    def integerBreak(self, n):
+        dp = {1: 1}
+
+        for num in range(2, n + 1):
+            dp[num] = 0 if num == n else num
+            for i in range(1, num):
+                val = dp[i] * dp[num - i]
+                dp[num] = max(dp[num], val)
+        return dp[n]
+```
