@@ -1,0 +1,79 @@
+# Perfect Squares
+
+## Difficulty
+Medium
+
+## Approach
+
+Use Dynamic Programming to compute the minimum number of perfect squares required to form every value from `0` to `n`.
+
+Let:
+
+```text
+dp[a]
+```
+
+represent the minimum number of perfect squares whose sum equals `a`.
+
+### Initialization
+
+- `dp[0] = 0`
+- Initialize all other values to a large number:
+
+```text
+n + 1
+```
+
+which serves as an impossible upper bound.
+
+### Transition
+
+For each amount `a`, try every perfect square less than or equal to `a`.
+
+If:
+
+```text
+square = s²
+```
+
+then:
+
+```text
+dp[a] = min(dp[a],1 + dp[a - square])
+```
+
+This corresponds to choosing `square` as the last perfect square used to form `a`.
+
+### Result
+
+The answer is:
+
+```text
+dp[n]
+```
+
+which represents the minimum number of perfect squares whose sum equals `n`.
+
+## Complexity
+
+- **Time Complexity:** O(n√n)
+- **Space Complexity:** O(n)
+
+For each value from `1` to `n`, up to `√n` perfect squares are considered.
+
+## Code
+
+```python
+class Solution(object):
+    def numSquares(self, n):
+        dp = [n + 1] * (n + 1)
+        dp[0] = 0
+
+        for a in range(1, n + 1):
+            s = 1
+            while s * s <= a:
+                dp[a] = min(dp[a],1 + dp[a - s * s])
+                s += 1
+
+        return dp[n]
+```
