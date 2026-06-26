@@ -1,0 +1,121 @@
+# Last Stone Weight II
+
+## Difficulty
+Medium
+
+## Approach
+
+The problem can be viewed as partitioning the stones into two groups whose sums are as close as possible.
+
+Let:
+
+```text
+stoneSum = sum(stones)
+```
+
+If one group has sum `total`, then the other group has sum:
+
+```text
+stoneSum - total
+```
+
+The remaining stone weight after all smash operations is:
+
+```text
+|total - (stoneSum - total)|
+```
+
+Therefore, the goal is to find a subset sum as close as possible to:
+
+```text
+stoneSum / 2
+```
+
+### DFS State
+
+Let:
+
+```text
+dfs(i, total)
+```
+
+represent the minimum possible remaining weight after considering stones from index `i` onward, where the current subset sum is `total`.
+
+### Base Case
+
+If:
+
+```text
+total >= target
+```
+
+or all stones have been processed:
+
+```text
+i == len(stones)
+```
+
+compute the resulting difference:
+
+```text
+abs(total - (stoneSum - total))
+```
+
+### Transition
+
+For each stone, there are two choices:
+
+1. Skip the stone.
+2. Include the stone in the current subset.
+
+Take the minimum difference produced by either choice:
+
+```text
+dfs(i, total) = min(dfs(i + 1, total),dfs(i + 1, total + stones[i]))
+```
+
+### Memoization
+
+Store results for each state:
+
+```text
+(i, total)
+```
+
+to avoid recomputing overlapping subproblems.
+
+## Complexity
+
+- **Time Complexity:** O(n × S)
+- **Space Complexity:** O(n × S)
+
+Where:
+
+- `n` = number of stones
+- `S` = total sum of all stones
+
+Each state `(i, total)` is computed at most once.
+
+## Code
+
+```python
+class Solution(object):
+    def lastStoneWeightII(self, stones):
+        dp = {}
+
+        target = math.ceil(sum(stones) / 2)
+        stoneSum = sum(stones)
+
+        def dfs(i, total):
+            if total >= target or i >= len(stones):
+                return abs(total -(stoneSum - total))
+
+            if (i, total) in dp:
+                return dp[(i, total)]
+
+            dp[(i, total)] = min(dfs(i + 1, total),dfs(i + 1, total + stones[i]))
+
+            return dp[(i, total)]
+
+        return dfs(0, 0)
+```
