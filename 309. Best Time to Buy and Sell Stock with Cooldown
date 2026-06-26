@@ -1,0 +1,114 @@
+# Best Time to Buy and Sell Stock with Cooldown
+
+## Difficulty
+Medium
+
+## Approach
+
+Use Dynamic Programming with memoized DFS.
+
+At each day, the state is determined by:
+
+- The current day `i`.
+- Whether we are allowed to buy (`buying = True`) or must sell/hold (`buying = False`).
+
+Let:
+
+```text
+dfs(i, buying)
+```
+
+represent the maximum profit obtainable starting from day `i`.
+
+### Buying State
+
+When buying is allowed, there are two choices:
+
+1. Buy the stock:
+
+```text
+dfs(i + 1, False) - prices[i]
+```
+
+2. Skip the day:
+
+```text
+dfs(i + 1, True)
+```
+
+Take the maximum of the two.
+
+### Selling State
+
+When holding a stock, there are two choices:
+
+1. Sell the stock:
+
+```text
+dfs(i + 2, True) + prices[i]
+```
+
+After selling, move to day `i + 2` because of the cooldown.
+
+2. Skip the day:
+
+```text
+dfs(i + 1, False)
+```
+
+Take the maximum of the two.
+
+### Memoization
+
+Store results for each state:
+
+```text
+(i, buying)
+```
+
+to avoid recomputing overlapping subproblems.
+
+### Result
+
+The answer is:
+
+```text
+dfs(0, True)
+```
+
+which represents the maximum profit starting from day `0` with the ability to buy.
+
+## Complexity
+
+- **Time Complexity:** O(n)
+- **Space Complexity:** O(n)
+
+Each state `(i, buying)` is computed at most once.
+
+## Code
+
+```python
+class Solution(object):
+    def maxProfit(self, prices):
+        dp = {}
+
+        def dfs(i, buying):
+            if i >= len(prices):
+                return 0
+
+            if (i, buying) in dp:
+                return dp[(i, buying)]
+
+            if buying:
+                buy = dfs(i + 1, False) - prices[i]
+                cooldown = dfs(i + 1, True)
+                dp[(i, buying)] = max(buy,cooldown)
+            else:
+                sell = dfs(i + 2, True) + prices[i]
+                cooldown = dfs(i + 1, False)
+                dp[(i, buying)] = max(sell,cooldown)
+
+            return dp[(i, buying)]
+
+        return dfs(0, True)
+```
