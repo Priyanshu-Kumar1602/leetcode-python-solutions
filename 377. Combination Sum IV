@@ -1,0 +1,81 @@
+# Combination Sum IV
+
+## Difficulty
+Medium
+
+## Approach
+
+Use Dynamic Programming to count the number of ordered combinations that sum to the target.
+
+Let:
+
+```text
+dp[t]
+```
+
+represent the number of ways to form a total of `t`.
+
+### Initialization
+
+There is exactly one way to form a total of `0`:
+
+```text
+dp[0] = 1
+```
+
+This represents the empty combination.
+
+### Transition
+
+For each total from `1` to `target`, try using every number in `nums` as the last element of the combination.
+
+If `n` is chosen last, the remaining sum is:
+
+```text
+total - n
+```
+
+Therefore:
+
+```text
+dp[total] += dp[total - n]
+```
+
+when `total - n` is valid.
+
+Since the outer loop iterates over totals and the inner loop iterates over numbers, different orders are counted as distinct combinations.
+
+### Result
+
+The answer is stored in:
+
+```text
+dp[target]
+```
+
+which represents the number of ordered combinations that sum to the target.
+
+## Complexity
+
+- **Time Complexity:** O(target × n)
+- **Space Complexity:** O(target)
+
+Where:
+
+- `target` is the target sum.
+- `n` is the number of elements in `nums`.
+
+## Code
+
+```python
+class Solution(object):
+    def combinationSum4(self, nums, target):
+        dp = {0: 1}
+
+        for total in range(1, target + 1):
+            dp[total] = 0
+            for n in nums:
+                dp[total] += dp.get(total - n, 0)
+
+        return dp[target]
+```
