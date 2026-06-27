@@ -1,0 +1,80 @@
+# Interleaving String
+
+## Difficulty
+Medium
+
+## Approach
+Use memoized DFS.
+
+Let `dfs(i, j)` represent whether:
+
+```text
+s3[i + j:]
+```
+
+can be formed by interleaving:
+
+```text
+s1[i:]
+```
+
+and
+
+```text
+s2[j:]
+```
+
+At each state, try matching the next character of `s3` with:
+
+- `s1[i]` (if available)
+- `s2[j]` (if available)
+
+If either choice leads to a valid interleaving, return `True`.
+
+Store failed states `(i, j)` in a memoization table to avoid recomputation.
+
+Before starting, verify that:
+
+```text
+len(s1) + len(s2) == len(s3)
+```
+
+otherwise an interleaving is impossible.
+
+## Complexity
+- **Time Complexity:** O(m × n)
+- **Space Complexity:** O(m × n)
+
+Where:
+- `m = len(s1)`
+- `n = len(s2)`
+
+## Code
+
+```python
+class Solution(object):
+    def isInterleave(self, s1, s2, s3):
+        if len(s1) + len(s2) != len(s3):
+            return False
+
+        dp = {}
+
+        def dfs(i, j):
+            if i == len(s1) and j == len(s2):
+                return True
+
+            if (i, j) in dp:
+                return dp[(i, j)]
+
+            if (i < len(s1) and s1[i] == s3[i + j] and dfs(i + 1, j)):
+                return True
+
+            if (j < len(s2) and s2[j] == s3[i + j] and dfs(i, j + 1)):
+                return True
+
+            dp[(i, j)] = False
+            
+            return dp[(i, j)]
+
+        return dfs(0, 0)
+```
