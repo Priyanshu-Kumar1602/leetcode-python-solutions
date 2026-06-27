@@ -1,0 +1,75 @@
+# Stone Game II
+
+## Difficulty
+Medium
+
+## Approach
+Use memoized minimax DFS.
+
+Let:
+
+```text
+dfs(Alice, i, M)
+```
+
+represent the maximum number of stones Alice can obtain starting from index `i` when the current value of `M` is `M`.
+
+At each turn, a player can take between:
+
+```text
+1 ... 2M
+```
+
+piles.
+
+If it is Alice's turn, she chooses the move that maximizes her total stones.
+
+If it is Bob's turn, he chooses the move that minimizes Alice's eventual total.
+
+For each possible choice `X`:
+
+```text
+M = max(M, X)
+```
+
+for the next state.
+
+Store results for each state `(Alice, i, M)` to avoid recomputation.
+
+## Complexity
+- **Time Complexity:** O(n³)
+- **Space Complexity:** O(n²)
+
+## Code
+
+```python
+class Solution(object):
+    def stoneGameII(self, piles):
+        dp = {}
+
+        def dfs(Alice, i, M):
+            if i == len(piles):
+                return 0
+
+            if (Alice, i, M) in dp:
+                return dp[(Alice, i, M)]
+
+            output = 0 if Alice else float("inf")
+            total = 0
+
+            for X in range(1, 2 * M + 1):
+                if i + X > len(piles):
+                    break
+
+                total += piles[i + X - 1]
+
+                if Alice:
+                    output = max(output,total + dfs(False, i + X, max(M, X)))
+                else:
+                    output = min(output,dfs(True, i + X, max(M, X)))
+
+            dp[(Alice, i, M)] = output
+            return dp[(Alice, i, M)]
+
+        return dfs(True, 0, 1)
+```
