@@ -1,0 +1,46 @@
+# Stone Game
+
+## Difficulty
+Medium
+
+## Approach
+Use memoized DFS on intervals.
+
+Let `dfs(l, r)` represent the maximum number of stones Alice can collect from the subarray `piles[l:r+1]`.
+
+The parity of the interval determines whose turn it is. When the number of remaining piles corresponds to Alice's turn, she adds the chosen pile's value to her score. Otherwise, Bob's move contributes `0` to Alice's score.
+
+For each interval, consider removing either the leftmost or rightmost pile and choose the option that maximizes Alice's final score.
+
+Store results for each interval `(l, r)` to avoid recomputation.
+
+After computing Alice's maximum achievable score, compare it against half of the total stones.
+
+## Complexity
+- **Time Complexity:** O(n²)
+- **Space Complexity:** O(n²)
+
+## Code
+
+```python
+class Solution(object):
+    def stoneGame(self, piles):
+        dp = {}
+
+        def dfs(l, r):
+            if l > r:
+                return 0
+            if (l, r) in dp:
+                return dp[(l, r)]
+
+            even = True if (r - l) % 2 else False
+
+            left = piles[l] if even else 0
+            right = piles[r] if even else 0
+
+            dp[(l, r)] = max(dfs(l, r - 1) + right,dfs(l + 1, r) + left)
+
+            return dp[(l, r)]
+
+        return dfs(0, len(piles) - 1) > sum(piles) // 2
+```
