@@ -1,0 +1,130 @@
+# Edit Distance
+
+## Difficulty
+Hard
+
+## Approach
+
+Use Dynamic Programming to compute the minimum number of operations required to convert `word1` into `word2`.
+
+Let:
+
+```text
+dp[i][j]
+```
+
+represent the minimum number of operations needed to convert:
+
+```text
+word1[i:]
+```
+
+into:
+
+```text
+word2[j:]
+```
+
+### Base Cases
+
+If `word1` is exhausted, the remaining characters of `word2` must be inserted:
+
+```text
+dp[len(word1)][j] = len(word2) - j
+```
+
+If `word2` is exhausted, the remaining characters of `word1` must be deleted:
+
+```text
+dp[i][len(word2)] = len(word1) - i
+```
+
+### Transition
+
+If the current characters match:
+
+```text
+word1[i] == word2[j]
+```
+
+no operation is needed:
+
+```text
+dp[i][j] = dp[i + 1][j + 1]
+```
+
+Otherwise, consider the three possible operations:
+
+#### Insert
+
+Insert `word2[j]` into `word1`:
+
+```text
+1 + dp[i][j + 1]
+```
+
+#### Delete
+
+Delete `word1[i]`:
+
+```text
+1 + dp[i + 1][j]
+```
+
+#### Replace
+
+Replace `word1[i]` with `word2[j]`:
+
+```text
+1 + dp[i + 1][j + 1]
+```
+
+Take the minimum of the three:
+
+```text
+dp[i][j] =
+1 + min(dp[i][j + 1],dp[i + 1][j],dp[i + 1][j + 1])
+```
+
+### Result
+
+The answer is:
+
+```text
+dp[0][0]
+```
+
+which represents the minimum operations required to transform the entire `word1` into `word2`.
+
+## Complexity
+
+- **Time Complexity:** O(m × n)
+- **Space Complexity:** O(m × n)
+
+Where:
+
+- `m` = length of `word1`
+- `n` = length of `word2`
+
+## Code
+
+```python
+class Solution(object):
+    def minDistance(self, word1, word2):
+        dp = [[float("inf") for i in range(len(word2) + 1)] for j in range(len(word1) + 1)]
+
+        for i in range(len(word2) + 1):
+            dp[len(word1)][i] = len(word2) - i
+
+        for j in range(len(word1) + 1):
+            dp[j][len(word2)] = len(word1) - j
+
+        for i in range(len(word1) - 1, -1, -1):
+            for j in range(len(word2) - 1, -1, -1):
+                if word1[i] == word2[j]:
+                    dp[i][j] = dp[i + 1][j + 1]
+                else:
+                    dp[i][j] = 1 + min(dp[i][j + 1],dp[i + 1][j],dp[i + 1][j + 1])
+
+        return dp[0][0]
+```
