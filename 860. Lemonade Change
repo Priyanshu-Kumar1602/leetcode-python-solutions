@@ -1,0 +1,48 @@
+# Lemonade Change
+
+## Difficulty
+Easy
+
+## Approach
+Use a greedy strategy to track the number of `$5` and `$10` bills.
+
+For each customer:
+- If they pay with `$5`, no change is needed.
+- If they pay with `$10`, give back one `$5`.
+- If they pay with `$20`, prioritize giving one `$10` and one `$5` as change. This preserves more `$5` bills for future transactions. If that's not possible, give three `$5` bills.
+
+If at any point the required change cannot be provided, return `False`.
+
+## Complexity
+- **Time Complexity:** `O(n)`
+- **Space Complexity:** `O(1)`
+
+## Code
+
+```python
+class Solution:
+    def lemonadeChange(self, bills):
+        five, ten = 0, 0
+
+        for b in bills:
+            if b == 5:
+                five += 1
+
+            elif b == 10:
+                if five == 0:
+                    return False
+
+                five -= 1
+                ten += 1
+
+            else:  # b == 20
+                if ten > 0 and five > 0:
+                    ten -= 1
+                    five -= 1
+                elif five >= 3:
+                    five -= 3
+                else:
+                    return False
+
+        return True
+```
