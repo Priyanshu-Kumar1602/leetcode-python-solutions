@@ -1,0 +1,63 @@
+# Longest Turbulent Subarray
+
+## Difficulty
+Medium
+
+## Approach
+Use a sliding window.
+
+A subarray is turbulent if the comparison signs between adjacent elements alternate:
+
+```text
+a > b < c > d < ...
+```
+
+or
+
+```text
+a < b > c < d > ...
+```
+
+Maintain:
+- `l` = left boundary of the current turbulent window.
+- `r` = right boundary.
+- `prev` = previous comparison sign (`'>'` or `'<'`).
+
+For each adjacent pair:
+- If the current comparison alternates with `prev`, extend the window.
+- If the comparison repeats, start a new window from the previous element.
+- If two adjacent elements are equal, turbulence breaks completely, so reset the window after that position.
+
+Track the maximum window length throughout the traversal.
+
+## Complexity
+- **Time Complexity:** `O(n)`
+- **Space Complexity:** `O(1)`
+
+## Code
+
+```python
+class Solution:
+    def maxTurbulenceSize(self, arr):
+        l, r = 0, 1
+        output = 1
+        prev = ""
+
+        while r < len(arr):
+            if arr[r - 1] > arr[r] and prev != ">":
+                output = max(output, r - l + 1)
+                r += 1
+                prev = ">"
+
+            elif arr[r - 1] < arr[r] and prev != "<":
+                output = max(output, r - l + 1)
+                r += 1
+                prev = "<"
+
+            else:
+                r = r + 1 if arr[r] == arr[r - 1] else r
+                l = r - 1
+                prev = ""
+
+        return output
+```
