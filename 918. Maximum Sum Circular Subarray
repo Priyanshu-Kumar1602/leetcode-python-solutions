@@ -1,0 +1,50 @@
+# Maximum Sum Circular Subarray
+
+## Difficulty
+Medium
+
+## Approach
+There are two possible cases for the maximum circular subarray:
+
+1. **The subarray does not wrap around**
+   - This is the standard Maximum Subarray problem.
+   - Use Kadane's algorithm to find `globMax`.
+
+2. **The subarray wraps around**
+   - A wrapping subarray consists of a prefix and a suffix.
+   - Equivalently, it includes all elements except some middle subarray.
+   - To maximize the circular sum, minimize the excluded middle subarray.
+   - Use Kadane's algorithm to find the minimum subarray sum `globMin`.
+   - The wrapped sum is `totalSum - globMin`.
+
+The answer is:
+
+```text
+max(globMax, totalSum - globMin)
+```
+
+However, if all numbers are negative, `totalSum - globMin` becomes `0`, which corresponds to selecting no elements (not allowed). In that case, return `globMax`.
+
+## Complexity
+- **Time Complexity:** `O(n)`
+- **Space Complexity:** `O(1)`
+
+## Code
+
+```python
+class Solution:
+    def maxSubarraySumCircular(self, nums):
+        globMax, globMin = max(nums), min(nums)
+        currMax = 0
+        currMin = 0
+        total = sum(nums)
+
+        for n in nums:
+            currMax = max(currMax + n, n)
+            currMin = min(currMin + n, n)
+
+            globMax = max(globMax, currMax)
+            globMin = min(globMin, currMin)
+
+        return max(globMax, total - globMin) if globMax > 0 else globMax
+```
