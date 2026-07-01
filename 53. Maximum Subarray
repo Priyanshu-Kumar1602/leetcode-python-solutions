@@ -1,0 +1,38 @@
+# Maximum Subarray
+
+## Difficulty
+Medium
+
+## Approach
+This is Kadane's Algorithm.
+
+We maintain a running sum (`currSum`) of the current subarray.
+- Add each element to `currSum`.
+- If `currSum` becomes negative, reset it to `0` because a negative prefix can only decrease the sum of future subarrays.
+- Track the maximum subarray sum seen so far in `output`.
+
+To handle the case where all numbers are negative, initialize `output = max(nums)`.
+
+## Complexity
+- **Time Complexity:** `O(n)`
+- **Space Complexity:** `O(1)`
+
+## Code
+
+```python
+class Solution:
+    def maxSubArray(self, nums):
+        output = max(nums)
+        currSum = 0
+
+        for n in nums:
+            currSum += n
+
+            if currSum < 0:
+                currSum = 0
+                continue
+
+            output = max(output, currSum)
+
+        return output
+```
