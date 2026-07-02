@@ -1,0 +1,50 @@
+# Partition Labels
+
+## Difficulty
+Medium
+
+## Approach
+First, record the last occurrence of every character in the string.
+
+Then, scan the string while maintaining:
+- `end`: the farthest last occurrence of any character seen in the current partition.
+- `size`: the current partition length.
+
+For each character:
+- Increase the current partition size.
+- Update `end` using the last occurrence of the current character.
+- When the current index reaches `end`, every character in the current partition has appeared for the last time, so the partition can be closed.
+- Store its size and start a new partition.
+
+This greedy approach produces the maximum number of valid partitions.
+
+## Complexity
+- **Time Complexity:** `O(n)`
+- **Space Complexity:** `O(1)`
+
+> The hash map stores the last occurrence of each lowercase English letter, so the extra space is constant.
+
+## Code
+
+```python
+class Solution:
+    def partitionLabels(self, s: str) -> List[int]:
+        lastIndex = {}
+
+        for i, c in enumerate(s):
+            lastIndex[c] = i
+
+        output = []
+        size = 0
+        end = 0
+
+        for i, c in enumerate(s):
+            size += 1
+            end = max(end, lastIndex[c])
+
+            if i == end:
+                output.append(size)
+                size = 0
+
+        return output
+```
