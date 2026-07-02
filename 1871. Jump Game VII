@@ -1,0 +1,54 @@
+# Jump Game VII
+
+## Difficulty
+Medium
+
+## Approach
+Use **Breadth-First Search (BFS)** to explore all reachable indices.
+
+- Start from index `0`.
+- For each reachable index `i`, the next possible positions lie in the range:
+  `[i + minJump, i + maxJump]`.
+- Enqueue every unvisited index in this range whose value is `'0'`.
+
+To avoid repeatedly scanning the same indices, maintain a variable `farthest`, which stores the furthest index that has already been checked.
+
+For each index `i`, begin scanning from:
+
+```text
+max(i + minJump, farthest + 1)
+```
+
+instead of `i + minJump`.
+
+This guarantees that every index is examined at most once, reducing the overall complexity from **O(n²)** to **O(n)**.
+
+If the last index is reached, return `True`; otherwise, return `False`.
+
+## Complexity
+- **Time Complexity:** `O(n)`
+- **Space Complexity:** `O(n)`
+
+## Code
+
+```python
+from collections import deque
+
+class Solution:
+    def canReach(self, s: str, minJump: int, maxJump: int) -> bool:
+        q = deque([0])
+        farthest = 0
+
+        while q:
+            i = q.popleft()
+            start = max(i + minJump, farthest + 1)
+
+            for j in range(start, min(i + maxJump + 1, len(s))):
+                if s[j] == "0":
+                    q.append(j)
+                    if j == len(s) - 1:
+                        return True
+            farthest = i + maxJump
+
+        return False
+```
