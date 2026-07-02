@@ -1,0 +1,43 @@
+# Jump Game II
+
+## Difficulty
+Medium
+
+## Approach
+Use a greedy level-by-level traversal, similar to Breadth-First Search (BFS).
+
+Maintain a window `[l, r]` representing all indices that can be reached using the current number of jumps.
+
+For each window:
+- Find the farthest index that can be reached from any index within `[l, r]`.
+- The next window becomes `[r + 1, farthest]`.
+- Increment the jump count.
+
+Repeat until the current window reaches or passes the last index.
+
+Since each index is processed only once across all windows, the algorithm runs in linear time.
+
+## Complexity
+- **Time Complexity:** `O(n)`
+- **Space Complexity:** `O(1)`
+
+## Code
+
+```python
+class Solution:
+    def jump(self, nums: List[int]) -> int:
+        l, r = 0, 0
+        output = 0
+
+        while r < len(nums) - 1:
+            farthest = 0
+
+            for i in range(l, r + 1):
+                farthest = max(farthest, i + nums[i])
+
+            l = r + 1
+            r = farthest
+            output += 1
+
+        return output
+```
