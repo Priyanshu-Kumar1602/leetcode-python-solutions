@@ -1,0 +1,45 @@
+# Gas Station
+
+## Difficulty
+Medium
+
+## Approach
+Use a greedy strategy.
+
+First, check whether the total amount of gas is at least the total cost. If `sum(gas) < sum(cost)`, completing the circuit is impossible, so return `-1`.
+
+Otherwise, traverse the stations while maintaining:
+- `total`: the current gas balance starting from the current candidate station.
+- `output`: the current candidate starting station.
+
+At each station:
+- Add the net gain `gas[i] - cost[i]` to `total`.
+- If `total` becomes negative, the current starting station cannot reach station `i + 1`.
+- Reset `total` to `0` and choose `i + 1` as the new candidate.
+
+After one pass, `output` is the unique valid starting station.
+
+## Complexity
+- **Time Complexity:** `O(n)`
+- **Space Complexity:** `O(1)`
+
+## Code
+
+```python
+class Solution:
+    def canCompleteCircuit(self, gas, cost):
+        if sum(gas) < sum(cost):
+            return -1
+
+        total = 0
+        output = 0
+
+        for i in range(len(gas)):
+            total += gas[i] - cost[i]
+
+            if total < 0:
+                total = 0
+                output = i + 1
+
+        return output
+```
