@@ -1,0 +1,41 @@
+# Merge Triplets to Form Target Triplet
+
+## Difficulty
+Medium
+
+## Approach
+A triplet can only contribute to the answer if none of its values exceed the corresponding value in `target`.
+
+For each valid triplet:
+- If one of its coordinates matches the target at that position, record that index.
+- Maintain a set `good` containing the indices (`0`, `1`, `2`) that have been matched.
+
+At the end:
+- If all three indices have been matched, the target triplet can be formed by merging those valid triplets.
+- Otherwise, it is impossible.
+
+The merge operation takes the maximum value at each position, so as long as every target coordinate is supplied by some valid triplet, the merged result will equal the target.
+
+## Complexity
+- **Time Complexity:** `O(n)`
+- **Space Complexity:** `O(1)`
+
+> Although a set is used, it stores at most three indices, so the extra space is constant.
+
+## Code
+
+```python
+class Solution:
+    def mergeTriplets(self, triplets, target):
+        good = set()
+
+        for t in triplets:
+            if (t[0] > target[0] or t[1] > target[1] or t[2] > target[2]):
+                continue
+
+            for i, v in enumerate(t):
+                if v == target[i]:
+                    good.add(i)
+
+        return len(good) == 3
+```
