@@ -1,0 +1,33 @@
+# Jump Game
+
+## Difficulty
+Medium
+
+## Approach
+Traverse the array from right to left while maintaining the leftmost index (`goal`) that can reach the last index.
+
+Initially, the goal is the last index. For each position `i`:
+- If `i + nums[i] >= goal`, then index `i` can reach the current goal.
+- Update `goal = i`.
+
+After processing all indices, if the goal has moved to index `0`, then the first index can reach the end; otherwise, it cannot.
+
+This greedy approach works because we only need to know the leftmost position that can eventually reach the last index.
+
+## Complexity
+- **Time Complexity:** `O(n)`
+- **Space Complexity:** `O(1)`
+
+## Code
+
+```python
+class Solution:
+    def canJump(self, nums: List[int]) -> bool:
+        goal = len(nums) - 1
+
+        for i in range(len(nums) - 1, -1, -1):
+            if i + nums[i] >= goal:
+                goal = i
+
+        return goal == 0
+```
