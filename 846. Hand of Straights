@@ -1,0 +1,60 @@
+# Hand of Straights
+
+## Difficulty
+Medium
+
+## Approach
+Use a frequency map and a min-heap.
+
+1. Count the frequency of each card.
+2. Insert all distinct card values into a min-heap so the smallest available card can always be accessed.
+3. While the heap is not empty:
+   - Let `first` be the smallest remaining card.
+   - Try to form a group of size `groupSize` starting from `first`.
+   - For every card in the range `[first, first + groupSize - 1]`:
+     - If the card does not exist in the frequency map, return `False`.
+     - Decrease its frequency.
+     - When a card's frequency becomes zero:
+       - It **must** be the smallest remaining card in the heap.
+       - Otherwise, a smaller card still has unused copies, making it impossible to form valid consecutive groups.
+       - Remove it from the heap.
+
+If all cards are successfully grouped, return `True`.
+
+## Complexity
+- **Time Complexity:** `O(n log n)`
+- **Space Complexity:** `O(n)`
+
+## Code
+
+```python
+import heapq
+
+class Solution:
+    def isNStraightHand(self, hand, groupSize):
+        if len(hand) % groupSize:
+            return False
+
+        count = {x: 0 for x in set(hand)}
+        for num in hand:
+            count[num] += 1
+
+        minH = list(count.keys())
+        heapq.heapify(minH)
+
+        while minH:
+            first = minH[0]
+
+            for num in range(first, first + groupSize):
+                if num not in count:
+                    return False
+
+                count[num] -= 1
+
+                if count[num] == 0:
+                    if num != minH[0]:
+                        return False
+                    heapq.heappop(minH)
+
+        return True
+```
