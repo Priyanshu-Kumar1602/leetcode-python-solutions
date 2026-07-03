@@ -1,0 +1,53 @@
+# Insert Interval
+
+## Difficulty
+Medium
+
+## Approach
+Traverse the intervals once while maintaining the merged `newInterval`.
+
+For each interval, there are three possible cases:
+
+1. **Current interval is completely after `newInterval`**
+   - If `newInterval` ends before the current interval starts, no further overlaps are possible.
+   - Add `newInterval` to the answer and append the remaining intervals.
+
+2. **Current interval is completely before `newInterval`**
+   - If the current interval ends before `newInterval` starts, add the current interval to the answer.
+
+3. **Intervals overlap**
+   - Merge them by updating:
+     - Start = minimum of both starts.
+     - End = maximum of both ends.
+   - Continue checking future intervals, as they may also overlap with the merged interval.
+
+If `newInterval` has not been inserted after processing all intervals, append it to the end.
+
+## Complexity
+- **Time Complexity:** `O(n)`
+- **Space Complexity:** `O(n)`
+
+## Code
+
+```python
+class Solution:
+    def insert(self, intervals, newInterval):
+        output = []
+
+        for i in range(len(intervals)):
+            # Case 1: newInterval comes before the current interval
+            if newInterval[1] < intervals[i][0]:
+                output.append(newInterval)
+                return output + intervals[i:]
+
+            # Case 2: current interval comes before newInterval
+            elif intervals[i][1] < newInterval[0]:
+                output.append(intervals[i])
+
+            # Case 3: overlap
+            else:
+                newInterval = [min(newInterval[0], intervals[i][0]),max(newInterval[1], intervals[i][1])]
+
+        output.append(newInterval)
+        return output
+```
