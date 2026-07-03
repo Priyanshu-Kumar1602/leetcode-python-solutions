@@ -1,0 +1,51 @@
+# Meeting Rooms II
+
+## Difficulty
+Medium
+
+## Approach
+Use two sorted arrays to simulate the allocation of meeting rooms.
+
+- Store all meeting start times in one array and all end times in another.
+- Sort both arrays independently.
+- Use two pointers:
+  - `s` traverses the start times.
+  - `e` traverses the end times.
+
+For each meeting start:
+- If the next meeting starts **before** the earliest meeting ends (`start[s] < end[e]`), a new room is needed.
+- Otherwise, a meeting has already ended, so reuse that room by advancing the `end` pointer.
+
+Track:
+- `count`: the number of rooms currently in use.
+- `output`: the maximum value of `count`, which is the minimum number of meeting rooms required.
+
+## Complexity
+- **Time Complexity:** `O(n log n)`
+- **Space Complexity:** `O(n)`
+
+## Code
+
+```python
+class Solution:
+    def minMeetingRooms(self, intervals: List[Interval]) -> int:
+        start = sorted([interval.start for interval in intervals])
+        end = sorted([interval.end for interval in intervals])
+
+        output = 0
+        count = 0
+        s = 0
+        e = 0
+
+        while s < len(start):
+            if start[s] < end[e]:
+                count += 1
+                s += 1
+            else:
+                count -= 1
+                e += 1
+
+            output = max(output, count)
+
+        return output
+```
