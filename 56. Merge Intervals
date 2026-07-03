@@ -1,0 +1,39 @@
+# Merge Intervals
+
+## Difficulty
+Medium
+
+## Approach
+First, sort the intervals by their start time.
+
+Maintain an output list containing the merged intervals.
+
+For each interval:
+- If it overlaps with the last interval in the output (`start <= lastEnd`), merge them by updating the end of the last interval to the larger end value.
+- Otherwise, there is no overlap, so append the current interval to the output.
+
+Since the intervals are sorted, an interval can only overlap with the last merged interval, making a single pass sufficient.
+
+## Complexity
+- **Time Complexity:** `O(n log n)`
+- **Space Complexity:** `O(n)`
+
+## Code
+
+```python
+class Solution:
+    def merge(self, intervals):
+        intervals.sort(key=lambda interval: interval[0])
+
+        output = [intervals[0]]
+
+        for start, end in intervals[1:]:
+            lastEnd = output[-1][1]
+
+            if start <= lastEnd:
+                output[-1][1] = max(lastEnd, end)
+            else:
+                output.append([start, end])
+
+        return output
+```
