@@ -1,0 +1,47 @@
+# Non-overlapping Intervals
+
+## Difficulty
+Medium
+
+## Approach
+Sort the intervals by their start time.
+
+Traverse the intervals while maintaining the **last interval kept**.
+
+For each interval:
+- If it does **not** overlap with the last kept interval (`start >= lastEnd`), keep it and update `last`.
+- Otherwise, an overlap occurs, so one interval must be removed.
+  - Increment the removal count.
+  - Keep the interval with the **smaller end time** by updating:
+    ```python
+    last[1] = min(lastEnd, end)
+    ```
+  - Keeping the interval that ends earlier leaves more room for future intervals, maximizing the number of intervals that can be kept.
+
+The final removal count is the minimum number of intervals that must be removed.
+
+## Complexity
+- **Time Complexity:** `O(n log n)`
+- **Space Complexity:** `O(1)` *(excluding the sorting algorithm)*
+
+## Code
+
+```python
+class Solution:
+    def eraseOverlapIntervals(self, intervals):
+        intervals.sort(key=lambda interval: interval[0])
+
+        last = intervals[0]
+        output = 0
+
+        for start, end in intervals[1:]:
+            lastEnd = last[1]
+
+            if start < lastEnd:
+                last[1] = min(lastEnd, end)
+                output += 1
+            else:
+                last = [start, end]
+
+        return output
+```
