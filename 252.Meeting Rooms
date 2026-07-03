@@ -1,0 +1,29 @@
+# Meeting Rooms
+
+## Difficulty
+Easy
+
+## Approach
+Sort the meetings by their start time.
+
+After sorting, any overlapping meetings must be adjacent. Iterate through the sorted intervals and compare each meeting with the next one:
+- If the current meeting's end time is greater than the next meeting's start time, the meetings overlap, so return `False`.
+- If no overlaps are found, all meetings can be attended, so return `True`.
+
+## Complexity
+- **Time Complexity:** `O(n log n)`
+- **Space Complexity:** `O(1)` 
+
+## Code
+
+```python
+class Solution:
+    def canAttendMeetings(self, intervals: List[Interval]) -> bool:
+        intervals.sort(key=lambda interval: interval.start)
+
+        for i in range(len(intervals) - 1):
+            if intervals[i].end > intervals[i + 1].start:
+                return False
+
+        return True
+```
