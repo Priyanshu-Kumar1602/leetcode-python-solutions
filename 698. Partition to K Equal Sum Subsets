@@ -1,0 +1,69 @@
+# Partition to K Equal Sum Subsets
+
+## Difficulty
+Medium
+
+## Approach
+Use **backtracking** by assigning each number to one of the `k` subsets.
+
+1. If the total sum is not divisible by `k`, return `False`.
+2. Let the required sum of each subset be:
+   ```text
+   target = sum(nums) // k
+   ```
+3. Sort the numbers in descending order so larger values are placed first, allowing invalid assignments to be rejected earlier.
+4. Maintain an array `sides`, where `sides[j]` stores the current sum of the `j`-th subset.
+5. For each number:
+   - Try placing it into every subset whose sum would not exceed `target`.
+   - Recurse to place the next number.
+   - If the placement fails, remove the number and try another subset.
+6. If all numbers are successfully assigned, return `True`.
+
+An important optimization is:
+
+```python
+if sides[j] == 0:
+    break
+```
+
+If placing the current number into one empty subset fails, trying any other empty subset is equivalent because all empty subsets are identical.
+
+## Complexity
+- **Time Complexity:** `O(k^n)` (worst case)
+- **Space Complexity:** `O(n + k)`
+
+> The recursion depth is `O(n)`, and the `sides` array uses `O(k)` space.
+
+## Code
+
+```python
+class Solution:
+    def canPartitionKSubsets(self, nums, k):
+        target = sum(nums) // k
+
+        if sum(nums) / k != target:
+            return False
+
+        nums.sort(reverse=True)
+        sides = [0] * k
+
+        def backtrack(i):
+            if i == len(nums):
+                return True
+
+            for j in range(k):
+                if sides[j] + nums[i] <= target:
+                    sides[j] += nums[i]
+
+                    if backtrack(i + 1):
+                        return True
+
+                    sides[j] -= nums[i]
+
+                if sides[j] == 0:
+                    break
+
+            return False
+
+        return backtrack(0)
+```
