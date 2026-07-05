@@ -1,0 +1,46 @@
+# Subsets
+
+## Difficulty
+Medium
+
+## Approach
+Use **backtracking (DFS)** to recursively decide whether to include each element in the current subset.
+
+At every index, there are two choices:
+1. Include the current element.
+2. Exclude the current element.
+
+When all elements have been considered, add a copy of the current subset to the answer.
+
+Since each element has two choices, the recursion explores all `2^n` possible subsets.
+
+## Complexity
+- **Time Complexity:** `O(n · 2^n)`
+- **Space Complexity:** `O(n)`
+
+> The recursion depth is `O(n)`. The output itself contains `2^n` subsets and is not counted as auxiliary space.
+
+## Code
+
+```python
+class Solution:
+    def subsets(self, nums):
+        output = []
+        subset = []
+
+        def dfs(i):
+            if i == len(nums):
+                output.append(subset[:])
+                return
+
+            # Include nums[i]
+            subset.append(nums[i])
+            dfs(i + 1)
+
+            # Exclude nums[i]
+            subset.pop()
+            dfs(i + 1)
+
+        dfs(0)
+        return output
+```
