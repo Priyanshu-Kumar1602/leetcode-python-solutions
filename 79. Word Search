@@ -1,0 +1,64 @@
+# Word Search
+
+## Difficulty
+Medium
+
+## Approach
+Use **Depth-First Search (DFS)** with backtracking.
+
+Try every cell in the board as the starting position.
+
+During DFS:
+- If all characters in the word have been matched, return `True`.
+- Stop the search if:
+  - The position is outside the board.
+  - The current cell does not match the required character.
+  - The cell has already been used in the current path.
+- Otherwise:
+  - Mark the current cell as visited.
+  - Recursively search the four adjacent cells.
+  - Backtrack by removing the cell from the visited set.
+
+If any DFS call succeeds, return `True`; otherwise, return `False`.
+
+## Complexity
+- **Time Complexity:** `O(m · n · 4^L)`
+- **Space Complexity:** `O(L)`
+
+> - `m` = number of rows
+> - `n` = number of columns
+> - `L` = length of the word
+
+The recursion depth and the visited set each store at most `L` cells.
+
+## Code
+
+```python
+class Solution:
+    def exist(self, board, word):
+        m = len(board)
+        n = len(board[0])
+
+        path = set()
+
+        def dfs(r, c, i):
+            if i == len(word):
+                return True
+
+            if (r < 0 or r == m or c < 0 or c == n or board[r][c] != word[i] or (r, c) in path):
+                return False
+
+            path.add((r, c))
+
+            found = (dfs(r + 1, c, i + 1) or dfs(r - 1, c, i + 1) or dfs(r, c + 1, i + 1) or dfs(r, c - 1, i + 1))
+
+            path.remove((r, c))
+            return found
+
+        for r in range(m):
+            for c in range(n):
+                if dfs(r, c, 0):
+                    return True
+
+        return False
+```
