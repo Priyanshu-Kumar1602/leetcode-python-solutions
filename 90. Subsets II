@@ -1,0 +1,52 @@
+# Subsets II
+
+## Difficulty
+Medium
+
+## Approach
+Use **backtracking** to generate all subsets while avoiding duplicates.
+
+First, sort the array so that duplicate elements are adjacent.
+
+For each index, there are two choices:
+1. Include the current element.
+2. Exclude the current element.
+
+When excluding an element, skip all consecutive duplicates before making the recursive call. This ensures that duplicate subsets are not generated.
+
+When all elements have been processed, add a copy of the current subset to the answer.
+
+## Complexity
+- **Time Complexity:** `O(n · 2^n)`
+- **Space Complexity:** `O(n)`
+
+> The recursion stack uses `O(n)` space. The output itself is not counted in the auxiliary space.
+
+## Code
+
+```python
+class Solution:
+    def subsetsWithDup(self, nums):
+        output = []
+        nums.sort()
+
+        subset = []
+
+        def backtrack(i):
+            if i == len(nums):
+                output.append(subset[:])
+                return
+
+            # Include nums[i]
+            subset.append(nums[i])
+            backtrack(i + 1)
+
+            # Exclude nums[i]
+            subset.pop()
+            while i + 1 < len(nums) and nums[i + 1] == nums[i]:
+                i += 1
+            backtrack(i + 1)
+
+        backtrack(0)
+        return output
+```
