@@ -1,0 +1,47 @@
+#Combinations
+
+## Difficulty
+Medium
+
+## Approach
+Use **backtracking** to generate all possible combinations of size `k`.
+
+Maintain:
+- `comb`: the current combination being built.
+- `start`: the smallest number that can be chosen next.
+
+At each step:
+- Try every number from `start` to `n`.
+- Add the chosen number to the current combination.
+- Recurse with `start = i + 1` so each number is used at most once and combinations remain in increasing order.
+- Backtrack by removing the last number.
+
+When the current combination reaches size `k`, add a copy to the answer.
+
+## Complexity
+- **Time Complexity:** `O(k · C(n, k))`
+- **Space Complexity:** `O(k)`
+
+> The recursion depth is at most `k`. The output itself, which contains `C(n, k)` combinations, is not included in the auxiliary space.
+
+## Code
+
+```python
+class Solution:
+    def combine(self, n, k):
+        output = []
+        comb = []
+
+        def backtrack(start):
+            if len(comb) == k:
+                output.append(comb[:])
+                return
+
+            for i in range(start, n + 1):
+                comb.append(i)
+                backtrack(i + 1)
+                comb.pop()
+
+        backtrack(1)
+        return output
+```
