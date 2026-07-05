@@ -1,0 +1,62 @@
+# Combination Sum II
+
+## Difficulty
+Medium
+
+## Approach
+Use **backtracking** to generate all unique combinations.
+
+First, sort the array so duplicate values are adjacent.
+
+For each index, there are two choices:
+
+1. **Include the current number**
+   - Add it to the current combination.
+   - Move to the next index because each number can be used **at most once**.
+
+2. **Exclude the current number**
+   - Skip all consecutive duplicates before moving to the next distinct value.
+   - This prevents generating the same combination multiple times.
+
+Stop the recursion when:
+- The current sum equals the target → add the current combination.
+- The current sum exceeds the target or all numbers have been processed → backtrack.
+
+## Complexity
+- **Time Complexity:** `O(2^n)`
+- **Space Complexity:** `O(n)`
+
+> The recursion stack and current combination require `O(n)` space. The output is not included in the auxiliary space.
+
+## Code
+
+```python
+class Solution:
+    def combinationSum2(self, nums, target):
+        output = []
+        nums.sort()
+
+        curr = []
+
+        def dfs(i, total):
+            if total == target:
+                output.append(curr[:])
+                return
+
+            if i == len(nums) or total > target:
+                return
+
+            # Include nums[i]
+            curr.append(nums[i])
+            dfs(i + 1, total + nums[i])
+
+            # Exclude nums[i]
+            curr.pop()
+            while i + 1 < len(nums) and nums[i + 1] == nums[i]:
+                i += 1
+
+            dfs(i + 1, total)
+
+        dfs(0, 0)
+        return output
+```
