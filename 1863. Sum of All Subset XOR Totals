@@ -1,0 +1,35 @@
+#Sum of All Subset XOR Totals
+
+## Difficulty
+Easy
+
+## Approach
+Instead of generating every subset, use a bit manipulation observation.
+
+Consider each bit independently.
+
+- If a bit is **not present** in any number, it never contributes to any subset XOR.
+- If a bit is present in **at least one** number, then across all subsets, that bit is set in exactly `2^(n-1)` subset XORs.
+
+Therefore:
+1. Compute the bitwise **OR** of all numbers.
+2. Multiply the result by `2^(n-1)`.
+
+This directly gives the sum of the XOR totals of all subsets.
+
+## Complexity
+- **Time Complexity:** `O(n)`
+- **Space Complexity:** `O(1)`
+
+## Code
+
+```python
+class Solution:
+    def subsetXORSum(self, nums):
+        output = 0
+
+        for num in nums:
+            output |= num
+
+        return output * (2 ** (len(nums) - 1))
+```
