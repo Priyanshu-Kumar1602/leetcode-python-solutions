@@ -1,0 +1,54 @@
+# Combination Sum
+
+## Difficulty
+Medium
+
+## Approach
+Use **backtracking (DFS)** to explore all possible combinations.
+
+At each index, there are two choices:
+
+1. **Take the current number**
+   - Add it to the current combination.
+   - Stay at the same index because the same number can be used unlimited times.
+
+2. **Skip the current number**
+   - Move to the next index.
+
+Stop the recursion when:
+- The current sum equals the target → add the current combination to the answer.
+- The current sum exceeds the target or all numbers have been considered → backtrack.
+
+This explores every valid combination without generating duplicates.
+
+## Complexity
+- **Time Complexity:** `O(2^t)` (exponential in the target/value combinations)
+- **Space Complexity:** `O(target)` (recursion stack and current combination)
+
+## Code
+
+```python
+class Solution:
+    def combinationSum(self, candidates, target):
+        output = []
+        curr = []
+
+        def dfs(i, total):
+            if total == target:
+                output.append(curr[:])
+                return
+
+            if i == len(candidates) or total > target:
+                return
+
+            # Include candidates[i]
+            curr.append(candidates[i])
+            dfs(i, total + candidates[i])
+
+            # Exclude candidates[i]
+            curr.pop()
+            dfs(i + 1, total)
+
+        dfs(0, 0)
+        return output
+```
