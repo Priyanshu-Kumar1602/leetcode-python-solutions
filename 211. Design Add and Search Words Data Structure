@@ -1,0 +1,90 @@
+# Design Add and Search Words Data Structure
+
+## Difficulty
+Medium
+
+## Approach
+Use a **Trie** to efficiently store words and perform searches.
+
+Each Trie node contains:
+- A dictionary of child nodes.
+- A boolean indicating whether a word ends at that node.
+
+### `addWord(word)`
+- Traverse the Trie character by character.
+- Create new nodes if they do not exist.
+- Mark the last node as the end of a word.
+
+### `search(word)`
+Perform a DFS on the Trie.
+
+- If the current character is a letter:
+  - Move to the corresponding child node.
+  - Return `False` if the child does not exist.
+- If the current character is `"."`:
+  - Recursively search every child node.
+  - If any path returns `True`, the word exists.
+
+When all characters have been processed, return whether the current node marks the end of a valid word.
+
+## Complexity
+
+Let `L` be the length of the search word.
+
+### addWord
+- **Time Complexity:** `O(L)`
+- **Space Complexity:** `O(L)` *(worst case for new nodes)*
+
+### search
+- **Best Case:** `O(L)`
+- **Worst Case:** `O(26^L)`
+
+The worst case occurs when the search word contains many `"."` wildcards, requiring exploration of multiple Trie branches.
+
+## Code
+
+```python
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.endOfWord = False
+
+
+class WordDictionary(object):
+
+    def __init__(self):
+        self.root = TrieNode()
+
+    def addWord(self, word):
+        curr = self.root
+
+        for c in word:
+            if c not in curr.children:
+                curr.children[c] = TrieNode()
+            curr = curr.children[c]
+
+        curr.endOfWord = True
+
+    def search(self, word):
+        def dfs(j, root):
+            curr = root
+
+            for i in range(j, len(word)):
+                c = word[i]
+
+                if c == ".":
+                    for child in curr.children.values():
+                        if dfs(i + 1, child):
+                            return True
+                    return False
+
+                if c not in curr.children:
+                    return False
+
+                curr = curr.children[c]
+
+            return curr.endOfWord
+
+        return dfs(0, self.root)
+```
+```
