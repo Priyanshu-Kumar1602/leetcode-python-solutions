@@ -1,0 +1,63 @@
+# N-Queens II
+
+## Difficulty
+Hard
+
+## Approach
+Use **backtracking** to place one queen in each row.
+
+To efficiently check whether a queen can be placed, maintain three sets:
+
+- `col`: columns that already contain a queen.
+- `posDiag`: positive diagonals identified by `row + col`.
+- `negDiag`: negative diagonals identified by `row - col`.
+
+For each row:
+1. Try placing a queen in every column.
+2. Skip columns or diagonals that are already occupied.
+3. Place the queen and recurse to the next row.
+4. After returning, remove the queen to explore other possibilities.
+
+Unlike the original N-Queens problem, we only count valid arrangements instead of storing the boards.
+
+## Complexity
+- **Time Complexity:** `O(n!)`
+- **Space Complexity:** `O(n)`
+
+> The recursion depth and the three sets each store at most `n` elements.
+
+## Code
+
+```python
+class Solution:
+    def totalNQueens(self, n: int) -> int:
+        col = set()
+        posDiag = set()   # row + col
+        negDiag = set()   # row - col
+
+        output = 0
+
+        def backtrack(r):
+            nonlocal output
+
+            if r == n:
+                output += 1
+                return
+
+            for c in range(n):
+                if (c in col or (r + c) in posDiag or (r - c) in negDiag):
+                    continue
+
+                col.add(c)
+                posDiag.add(r + c)
+                negDiag.add(r - c)
+
+                backtrack(r + 1)
+
+                col.remove(c)
+                posDiag.remove(r + c)
+                negDiag.remove(r - c)
+
+        backtrack(0)
+        return output
+```
