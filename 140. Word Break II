@@ -1,0 +1,51 @@
+# Word Break II
+
+## Difficulty
+Hard
+
+## Approach
+Use **backtracking** to generate all valid sentences.
+
+Convert `wordDict` into a set for **O(1)** word lookups.
+
+Starting from index `i`:
+- Try every possible substring `s[i:j+1]`.
+- If the substring exists in the dictionary:
+  - Add it to the current sentence.
+  - Recursively continue from index `j + 1`.
+  - Backtrack by removing the word.
+
+When the end of the string is reached, join the selected words with spaces and add the sentence to the answer.
+
+## Complexity
+- **Time Complexity:** Exponential in the worst case (`O(2^n)`)
+- **Space Complexity:** `O(n)`
+
+> The recursion depth is at most `n`. The output list is not included in the auxiliary space.
+
+## Code
+
+```python
+class Solution:
+    def wordBreak(self, s, wordDict):
+        wordDict = set(wordDict)
+
+        output = []
+        curr = []
+
+        def backtrack(i):
+            if i == len(s):
+                output.append(" ".join(curr))
+                return
+
+            for j in range(i, len(s)):
+                word = s[i:j + 1]
+
+                if word in wordDict:
+                    curr.append(word)
+                    backtrack(j + 1)
+                    curr.pop()
+
+        backtrack(0)
+        return output
+```
