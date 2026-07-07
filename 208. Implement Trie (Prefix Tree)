@@ -1,0 +1,83 @@
+# Implement Trie (Prefix Tree)
+
+## Difficulty
+Medium
+
+## Approach
+A **Trie (Prefix Tree)** is a tree-like data structure used for efficient storage and retrieval of strings.
+
+Each node contains:
+- `children`: a dictionary mapping characters to child nodes.
+- `endOfWord`: a boolean indicating whether a complete word ends at that node.
+
+### Operations
+
+- **Insert**
+  - Traverse the Trie character by character.
+  - Create a new node if the character does not exist.
+  - After processing all characters, mark the last node as the end of a word.
+
+- **Search**
+  - Traverse the Trie following each character.
+  - If any character is missing, return `False`.
+  - After processing all characters, return whether the current node marks the end of a word.
+
+- **StartsWith**
+  - Traverse the Trie using the prefix.
+  - If every character exists, return `True`.
+  - Unlike `search`, the final node does **not** need to be the end of a word.
+
+## Complexity
+
+Let `L` be the length of the input word or prefix.
+
+| Operation | Time | Space |
+|-----------|------|-------|
+| Insert | `O(L)` | `O(L)` *(new nodes in the worst case)* |
+| Search | `O(L)` | `O(1)` |
+| StartsWith | `O(L)` | `O(1)` |
+
+## Code
+
+```python
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.endOfWord = False
+
+
+class Trie:
+
+    def __init__(self):
+        self.root = TrieNode()
+
+    def insert(self, word):
+        curr = self.root
+
+        for c in word:
+            if c not in curr.children:
+                curr.children[c] = TrieNode()
+            curr = curr.children[c]
+
+        curr.endOfWord = True
+
+    def search(self, word):
+        curr = self.root
+
+        for c in word:
+            if c not in curr.children:
+                return False
+            curr = curr.children[c]
+
+        return curr.endOfWord
+
+    def startsWith(self, prefix):
+        curr = self.root
+
+        for c in prefix:
+            if c not in curr.children:
+                return False
+            curr = curr.children[c]
+
+        return True
+```
