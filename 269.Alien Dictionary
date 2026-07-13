@@ -1,0 +1,83 @@
+# Alien Dictionary
+
+## Difficulty
+Hard
+
+## Approach
+Treat each character as a node in a directed graph.
+
+### Step 1: Build the graph
+- Create a node for every unique character.
+- Compare every pair of adjacent words.
+- Find the first position where the two words differ.
+- Add a directed edge:
+  ```text
+  w1[j] → w2[j]
+  ```
+  meaning `w1[j]` must come before `w2[j]`.
+- If a longer word appears before its prefix (e.g., `"abc"` before `"ab"`), the ordering is invalid, so return an empty string.
+
+### Step 2: Topological Sort (DFS)
+Use DFS to perform a topological sort.
+
+Maintain a dictionary `visit`:
+- `True` → currently in the recursion stack.
+- `False` → fully processed.
+
+During DFS:
+- If a node already marked `True` is visited again, a cycle exists, so return an empty string.
+- After exploring all neighbors, add the character to the output.
+
+Finally, reverse the output to obtain the correct alien alphabet order.
+
+## Complexity
+
+Let:
+- `N` = number of words
+- `C` = total number of characters across all words
+
+- **Time Complexity:** `O(C)`
+- **Space Complexity:** `O(C)`
+
+## Code
+
+```python
+class Solution:
+    def alienOrder(self, words):
+        adj = {c: set() for word in words for c in word}
+
+        for i in range(len(words) - 1):
+            w1, w2 = words[i], words[i + 1]
+            minLen = min(len(w1), len(w2))
+
+            if len(w1) > len(w2) and w1[:minLen] == w2[:minLen]:
+                return ""
+
+            for j in range(minLen):
+                if w1[j] != w2[j]:
+                    adj[w1[j]].add(w2[j])
+                    break
+
+        visit = {}
+        output = []
+
+        def dfs(c):
+            if c in visit:
+                return visit[c]
+
+            visit[c] = True
+
+            for nei in adj[c]:
+                if dfs(nei):
+                    return True
+
+            visit[c] = False
+            output.append(c)
+
+        for c in adj:
+            if dfs(c):
+                return ""
+
+        output.reverse()
+        return "".join(output)
+```
