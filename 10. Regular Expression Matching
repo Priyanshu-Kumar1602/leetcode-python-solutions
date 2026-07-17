@@ -1,0 +1,82 @@
+# Regular Expression Matching
+
+## Difficulty
+Hard
+
+## Approach
+Use **DFS + Memoization (Top-Down Dynamic Programming)**.
+
+Let `dfs(i, j)` represent whether `s[i:]` matches `p[j:]`.
+
+### Cases
+
+1. **Both strings are exhausted**
+   - If both `i` and `j` reach the end, the strings match.
+
+2. **Pattern is exhausted first**
+   - If the pattern is finished while the string still has characters, return `False`.
+
+3. **Current characters match**
+   - Characters match if:
+     - `s[i] == p[j]`, or
+     - `p[j] == '.'`.
+
+4. **Next pattern character is `'*'`**
+   - Two choices:
+     - Skip the current pattern character and `'*'`:
+       ```text
+       dfs(i, j + 2)
+       ```
+     - Use `'*'` to match the current character (only if the current characters match):
+       ```text
+       dfs(i + 1, j)
+       ```
+
+5. **Normal character**
+   - If the current characters match, move both pointers forward.
+
+Memoize every `(i, j)` state to avoid recomputing overlapping subproblems.
+
+## Complexity
+
+Let:
+- `m` = length of `s`
+- `n` = length of `p`
+
+- **Time Complexity:** `O(m × n)`
+- **Space Complexity:** `O(m × n)`
+
+There are at most `m × n` unique `(i, j)` states, and each state is computed only once.
+
+## Code
+
+```python
+class Solution(object):
+    def isMatch(self, s, p):
+        dp = {}
+
+        def dfs(i, j):
+            if i >= len(s) and j >= len(p):
+                return True
+
+            if i < len(s) and j >= len(p):
+                return False
+
+            if (i, j) in dp:
+                return dp[(i, j)]
+
+            match = (i < len(s) and (s[i] == p[j] or p[j] == "."))
+
+            if (j + 1) < len(p) and p[j + 1] == "*":
+                dp[(i, j)] = (dfs(i, j + 2) or (match and dfs(i + 1, j)))
+                return dp[(i, j)]
+
+            if match:
+                dp[(i, j)] = dfs(i + 1, j + 1)
+                return dp[(i, j)]
+
+            dp[(i, j)] = False
+            return dp[(i, j)]
+
+        return dfs(0, 0)
+```
