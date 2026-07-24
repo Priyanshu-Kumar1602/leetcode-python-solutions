@@ -1,0 +1,54 @@
+# Reconstruct Itinerary
+
+## Difficulty
+Hard
+
+## Approach
+Model the tickets as a directed graph where:
+- Each airport is a node.
+- Each ticket represents a directed edge.
+
+To obtain the **lexicographically smallest itinerary**, sort the tickets in **reverse lexicographical order** before building the adjacency list. This allows us to always remove (`pop`) the smallest destination in `O(1)` time.
+
+Use **Hierholzer's Algorithm** to find an Eulerian path.
+
+Starting from `"JFK"`:
+- Repeatedly visit the smallest available destination.
+- Remove each ticket as it is used.
+- After all outgoing edges from an airport have been used, add that airport to the itinerary.
+
+Since airports are added after exploring all their outgoing flights, the itinerary is built in reverse order. Reverse the result before returning it.
+
+## Complexity
+
+Let `E` be the number of tickets.
+
+- **Time Complexity:** `O(E log E)`
+- **Space Complexity:** `O(E)`
+
+The sorting step takes `O(E log E)`, while building the graph and DFS each take `O(E)`.
+
+## Code
+
+```python
+class Solution(object):
+    def findItinerary(self, tickets):
+        adj = {src: [] for src, dst in tickets}
+
+        tickets.sort(reverse=True)
+
+        for src, dst in tickets:
+            adj[src].append(dst)
+
+        output = []
+
+        def dfs(src):
+            while src in adj and adj[src]:
+                nxt = adj[src].pop()
+                dfs(nxt)
+
+            output.append(src)
+
+        dfs("JFK")
+        return output[::-1]
+```
